@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:example}?ssl=false&sslmode=disable
+
+    ## ?ssl=true&sslmode=require 
+    ## the ?ssl=true&sslmode=require this check if the ssl is activated on the database
+    
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver # Database driver
+    hikari:
+      max-lifetime: 270000 # 4.5 minutes (in ms)
+      idle-timeout: 200000 # 4.1 minutes (should be less than maxLifetime)
+      connection-timeout: 30000
+      minimum-idle: 2
+      maximum-pool-size: 10
+      connection-test-query: SELECT 1
+  jpa:
+    open-in-view: false 
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update} #create #create-drop # validate #none #update
+    show-sql: false # show the updates on the sql on the console

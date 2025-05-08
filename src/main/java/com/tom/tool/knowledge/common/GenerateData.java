@@ -1,13 +1,10 @@
 package com.tom.tool.knowledge.common;
 
-import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.context.annotation.Configuration;
-
-import com.tom.aws.awstest.product.Product;
 
 import net.datafaker.Faker;
 
@@ -15,9 +12,10 @@ import net.datafaker.Faker;
 public class GenerateData {
 
 	private final Faker faker = new Faker();
-	// private final AtomicLong atomicCounter = new AtomicLong(0);
 	private final ThreadLocalRandom loc = ThreadLocalRandom.current();
 	private final Set<String> generatedNames = new HashSet<>();
+	
+	/*
 	
 	public Product datagen() {
 		Product pro = new Product();
@@ -37,6 +35,8 @@ public class GenerateData {
 
 		return pro;
 	}
+
+	 */
 
     private String generateUniqueProductName() {
         String name;
