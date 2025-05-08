@@ -38,7 +38,8 @@ public class GenerateData {
 
 	 */
 
-    private String generateUniqueProductName() {
+    @SuppressWarnings("unused")
+	private String generateUniqueProductName() {
         String name;
         do {
             name = faker.commerce().productName();
