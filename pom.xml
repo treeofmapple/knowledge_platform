@@ -9,13 +9,12 @@
 		<version>3.4.5</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.tom.web</groupId>
+	<groupId>com.tom.service</groupId>
 	<artifactId>knowledge</artifactId>
 	<version>v1</version>
-	<name>knowledge_plataform</name>
-	<packaging>pom</packaging>
-
-	<description>Platform to store knowledge from users</description>
+	<name>knowledge_platform</name>
+	<description>Platform to store knowledge for users study later, developed
+		for enterprises.</description>
 
 	<licenses>
 		<license>
@@ -40,8 +39,8 @@
 		<mapstruct.version>1.6.2</mapstruct.version>
 		<bucket4j.version>8.10.1</bucket4j.version>
 		<datafaker.version>2.4.2</datafaker.version>
-		<amazon.storage>2.31.35</amazon.storage>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -49,11 +48,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -64,12 +63,10 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-
 		<!-- Observation -->
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
-			<version>1.14.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.loki4j</groupId>
@@ -87,6 +84,20 @@
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-tracing-bridge-otel</artifactId>
+		</dependency>
+
+		<!-- Bucket4j -->
+		<dependency>
+			<groupId>com.bucket4j</groupId>
+			<artifactId>bucket4j-core</artifactId>
+			<version>${bucket4j.version}</version>
+		</dependency>
+
+		<!-- AWS Bucket S3 -->
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>2.25.12</version> <!-- Use the latest version -->
 		</dependency>
 
 		<!-- JJWT Token -->
@@ -125,20 +136,6 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- Bucket4j -->
-		<dependency>
-			<groupId>com.bucket4j</groupId>
-			<artifactId>bucket4j-core</artifactId>
-			<version>${bucket4j.version}</version>
-		</dependency>
-
-		<!-- AWS S3 -->
-		<dependency>
-			<groupId>software.amazon.awssdk</groupId>
-			<artifactId>s3</artifactId>
-			<version>${amazon.storage}</version>
-		</dependency>
-
 		<!-- Data Generator-->
 		<dependency>
 			<groupId>net.datafaker</groupId>
@@ -146,19 +143,26 @@
 			<version>${datafaker.version}</version>
 		</dependency>
 
+		<!-- Databases -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -215,5 +219,6 @@
 		</plugins>
 
 	</build>
+
 
 </project>

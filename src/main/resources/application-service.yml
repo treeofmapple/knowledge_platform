@@ -1,4 +1,0 @@
-application:
-  security:
-    user: ${SECURITY_USER:admin}
-    password: ${SECURITY_PASSWORD:password}

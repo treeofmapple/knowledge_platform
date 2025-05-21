@@ -1,8 +1,0 @@
-spring:
-  profiles:
-    active: console, database, actuator, service
-  application:
-      name: knowledge
-
-server:
-  port: ${SERVER_PORT:8000}
