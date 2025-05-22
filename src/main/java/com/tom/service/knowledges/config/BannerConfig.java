@@ -1,9 +1,9 @@
-package com.tom.web.knowledge.config;
+package com.tom.service.knowledges.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
 
-import com.tom.web.knowledge.common.CustomBanner;
+import com.tom.service.knowledges.common.CustomBanner;
 
 public class BannerConfig implements SpringApplicationRunListener {
     

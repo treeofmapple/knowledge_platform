@@ -5,9 +5,9 @@ import java.io.IOException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tom.aws.awstest.config.AwsStorageConfig;
-import com.tom.aws.awstest.exception.DataTransferenceException;
-import com.tom.aws.awstest.image.Image;
+import com.tom.service.knowledges.config.AwsStorageConfig;
+import com.tom.service.knowledges.exception.DataTransferenceException;
+import com.tom.service.knowledges.image.Image;
 
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -84,40 +84,5 @@ public class AwsFunctions {
 	    return newKey;
 	
 	}
-	
-	/*
-	
-	public void addTags(Image image, String tagKey, String tagValue) {
-		awsConfig.getS3Client()
-			.putObjectTagging(PutObjectTaggingRequest.builder()
-		    .bucket(awsConfig.getBucketName())
-		    .key(image.getObjectKey())
-		    .tagging(Tagging.builder()
-		        .tagSet(List.of(Tag.builder()
-		        		.key(tagKey)
-		        		.value(tagValue)
-		        		.build())).build())
-		    .build());
-	}
-	
-	public void removeTag(Image image, String tagKey, String tagValue) { // remove one tag from a current image
-	    awsConfig.getS3Client().putObjectTagging(
-	            PutObjectTaggingRequest.builder()
-	                .bucket(awsConfig.getBucketName())
-	                .key(image.getObjectKey())
-	                .tagging(Tagging.builder()
-	                    .tagSet(List.of(Tag.builder()
-	                    		.key(tag)
-	                    		))
-	                    .build())
-	                .build()
-        );
-	}
-	
-	public void deleteTags(String tagKey, String tagValue) { // delete the tag, and if is on a image remove it also
-		
-	}
-	
-	*/
 	
 }

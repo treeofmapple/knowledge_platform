@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.config;
+package com.tom.service.knowledges.config;
 
 import java.util.UUID;
 
@@ -13,9 +13,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.tom.web.knowledge.exception.NotFoundException;
-import com.tom.web.knowledge.security.ApplicationAuditAware;
-import com.tom.web.knowledge.security.UserRepository;
+import com.tom.service.knowledges.exception.NotFoundException;
+import com.tom.service.knowledges.security.ApplicationAuditAware;
+import com.tom.service.knowledges.security.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -52,14 +52,7 @@ public class ApplicationConfig {
 	
 	@Bean
 	PasswordEncoder passwordEncoder() {
-		
 		return new BCryptPasswordEncoder(16);
-		
-		/*
-		return new Argon2PasswordEncoder(
-				16, 32, 2, 65536, 4
-		);
-		*/
 	}
 	
 }

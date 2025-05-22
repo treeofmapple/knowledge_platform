@@ -1,19 +1,19 @@
-package com.tom.web.knowledge.common;
+package com.tom.service.knowledges.common;
 
 import org.springframework.stereotype.Component;
 
-import com.tom.web.knowledge.exception.NotFoundException;
-import com.tom.web.knowledge.security.AuthenticationMapper;
-import com.tom.web.knowledge.security.TokenRepository;
-import com.tom.web.knowledge.security.TokenType;
-import com.tom.web.knowledge.security.UpdateRequest;
-import com.tom.web.knowledge.security.User;
+import com.tom.service.knowledges.exception.NotFoundException;
+import com.tom.service.knowledges.security.AuthenticationMapper;
+import com.tom.service.knowledges.security.TokenRepository;
+import com.tom.service.knowledges.security.TokenType;
+import com.tom.service.knowledges.security.UpdateRequest;
+import com.tom.service.knowledges.security.User;
 
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class EntityUpdater {
+public class UserEntityUpdate {
 
 	private final TokenRepository tokenRepository;
 	private final AuthenticationMapper mapper;

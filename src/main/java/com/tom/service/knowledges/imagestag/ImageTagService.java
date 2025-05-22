@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.tom.aws.awstest.common.DataMerger;
-import com.tom.aws.awstest.common.ServiceLogger;
-import com.tom.aws.awstest.common.SystemUtils;
-import com.tom.aws.awstest.image.ImageMapper;
+import com.tom.service.knowledges.common.ЕntityUpdater;
+import com.tom.service.knowledges.common.ServiceLogger;
+import com.tom.service.knowledges.common.SystemUtils;
+import com.tom.service.knowledges.image.ImageMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +17,7 @@ public class ImageTagService {
 
 	private final ImageTagRepository repository;
 	private final ImageMapper mapper;
-	private final DataMerger merger;
+	private final ЕntityUpdater merger;
 	private final SystemUtils utils;
 	
 	public List<ImageTagResponse> searchAllTags() {

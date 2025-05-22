@@ -1,6 +1,6 @@
-package com.tom.web.knowledge.exception;
+package com.tom.service.knowledges.exception;
 
-import com.tom.web.knowledge.exception.Global.DateGlobalException;
+import com.tom.service.knowledges.exception.Global.DateGlobalException;
 
 import lombok.EqualsAndHashCode;
 

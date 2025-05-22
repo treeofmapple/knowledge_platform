@@ -1,10 +1,10 @@
-package com.tom.web.knowledge.security;
+package com.tom.service.knowledges.security;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
-import com.tom.web.knowledge.exception.InternalException;
+import com.tom.service.knowledges.exception.InternalException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

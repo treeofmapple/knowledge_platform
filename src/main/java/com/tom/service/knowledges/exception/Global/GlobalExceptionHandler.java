@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.exception.Global;
+package com.tom.service.knowledges.exception.Global;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -11,12 +11,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.tom.web.knowledge.exception.AlreadyExistsException;
-import com.tom.web.knowledge.exception.BadRequestException;
-import com.tom.web.knowledge.exception.DuplicateException;
-import com.tom.web.knowledge.exception.InternalException;
-import com.tom.web.knowledge.exception.InvalidDateException;
-import com.tom.web.knowledge.exception.NotFoundException;
+import com.tom.service.knowledges.exception.AlreadyExistsException;
+import com.tom.service.knowledges.exception.BadRequestException;
+import com.tom.service.knowledges.exception.DuplicateException;
+import com.tom.service.knowledges.exception.InternalException;
+import com.tom.service.knowledges.exception.InvalidDateException;
+import com.tom.service.knowledges.exception.NotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

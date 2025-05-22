@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.exception.Global;
+package com.tom.service.knowledges.exception.Global;
 
 @SuppressWarnings("serial")
 public abstract class CustomGlobalException extends RuntimeException {

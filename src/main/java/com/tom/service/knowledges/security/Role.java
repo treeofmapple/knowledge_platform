@@ -1,17 +1,17 @@
-package com.tom.web.knowledge.security;
+package com.tom.service.knowledges.security;
 
-import static com.tom.web.knowledge.security.Permission.ADMIN_CREATE;
-import static com.tom.web.knowledge.security.Permission.ADMIN_DELETE;
-import static com.tom.web.knowledge.security.Permission.ADMIN_READ;
-import static com.tom.web.knowledge.security.Permission.ADMIN_UPDATE;
-import static com.tom.web.knowledge.security.Permission.MANAGER_CREATE;
-import static com.tom.web.knowledge.security.Permission.MANAGER_DELETE;
-import static com.tom.web.knowledge.security.Permission.MANAGER_READ;
-import static com.tom.web.knowledge.security.Permission.MANAGER_UPDATE;
-import static com.tom.web.knowledge.security.Permission.USER_CREATE;
-import static com.tom.web.knowledge.security.Permission.USER_DELETE;
-import static com.tom.web.knowledge.security.Permission.USER_READ;
-import static com.tom.web.knowledge.security.Permission.USER_UPDATE;
+import static com.tom.service.knowledges.security.Permission.ADMIN_CREATE;
+import static com.tom.service.knowledges.security.Permission.ADMIN_DELETE;
+import static com.tom.service.knowledges.security.Permission.ADMIN_READ;
+import static com.tom.service.knowledges.security.Permission.ADMIN_UPDATE;
+import static com.tom.service.knowledges.security.Permission.MANAGER_CREATE;
+import static com.tom.service.knowledges.security.Permission.MANAGER_DELETE;
+import static com.tom.service.knowledges.security.Permission.MANAGER_READ;
+import static com.tom.service.knowledges.security.Permission.MANAGER_UPDATE;
+import static com.tom.service.knowledges.security.Permission.USER_CREATE;
+import static com.tom.service.knowledges.security.Permission.USER_DELETE;
+import static com.tom.service.knowledges.security.Permission.USER_READ;
+import static com.tom.service.knowledges.security.Permission.USER_UPDATE;
 
 import java.util.Collections;
 import java.util.List;

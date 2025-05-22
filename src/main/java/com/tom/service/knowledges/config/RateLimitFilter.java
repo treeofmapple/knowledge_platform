@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.config;
+package com.tom.service.knowledges.config;
 
 import java.io.IOException;
 import java.time.Duration;

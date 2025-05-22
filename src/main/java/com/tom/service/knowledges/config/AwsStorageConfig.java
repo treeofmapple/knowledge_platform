@@ -2,7 +2,7 @@ package com.tom.service.knowledges.config;
 
 import org.springframework.context.annotation.Configuration;
 
-import com.tom.aws.awstest.common.ServiceLogger;
+import com.tom.service.knowledges.common.ServiceLogger;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;

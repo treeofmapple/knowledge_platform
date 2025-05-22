@@ -2,8 +2,8 @@ package com.tom.service.knowledges.image;
 
 import java.util.List;
 
-import com.tom.aws.awstest.imagetag.ImageTag;
-import com.tom.aws.awstest.models.Auditable;
+import com.tom.service.knowledges.imagestag.ImageTag;
+import com.tom.service.knowledges.model.Auditable;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

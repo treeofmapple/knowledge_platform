@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.common;
+package com.tom.service.knowledges.common;
 
 import java.io.BufferedReader;
 import java.io.IOException;

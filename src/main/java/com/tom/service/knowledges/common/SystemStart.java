@@ -2,8 +2,8 @@ package com.tom.service.knowledges.common;
 
 import org.springframework.stereotype.Component;
 
-import com.tom.aws.awstest.config.AwsProperties;
-import com.tom.aws.awstest.config.AwsStorageConfig;
+import com.tom.service.knowledges.config.AwsProperties;
+import com.tom.service.knowledges.config.AwsStorageConfig;
 
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;

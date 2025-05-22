@@ -1,6 +1,6 @@
 package com.tom.service.knowledges.exception;
 
-import com.tom.aws.awstest.exception.global.CustomGlobalException;
+import com.tom.service.knowledges.exception.Global.CustomGlobalException;
 
 import lombok.EqualsAndHashCode;
 

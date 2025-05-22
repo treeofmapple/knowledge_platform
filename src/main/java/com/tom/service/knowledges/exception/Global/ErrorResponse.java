@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.exception.Global;
+package com.tom.service.knowledges.exception.Global;
 
 import java.time.LocalDateTime;
 import java.util.Map;

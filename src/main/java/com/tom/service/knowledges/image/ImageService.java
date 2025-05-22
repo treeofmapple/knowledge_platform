@@ -11,10 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tom.aws.awstest.common.AwsFunctions;
-import com.tom.aws.awstest.common.DataMerger;
-import com.tom.aws.awstest.common.ServiceLogger;
-import com.tom.aws.awstest.common.SystemUtils;
+import com.tom.service.knowledges.common.AwsFunctions;
+import com.tom.service.knowledges.common.ЕntityUpdater;
+import com.tom.service.knowledges.common.ServiceLogger;
+import com.tom.service.knowledges.common.SystemUtils;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class ImageService {
 	private final ImageRepository repository;
 	private final ImageMapper mapper;
 	private final SystemUtils utils;
-	private final DataMerger merger;
+	private final ЕntityUpdater merger;
 	private final ImageUtils repoCall;
 	private final int PAGE_SIZE = 20; 
 

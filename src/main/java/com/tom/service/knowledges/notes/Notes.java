@@ -1,6 +1,6 @@
 package com.tom.service.knowledges.notes;
 
-import com.tom.aws.awstest.models.Auditable;
+import com.tom.service.knowledges.model.Auditable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

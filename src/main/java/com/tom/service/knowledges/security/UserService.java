@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.security;
+package com.tom.service.knowledges.security;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -12,12 +12,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tom.web.knowledge.common.EntityUpdater;
-import com.tom.web.knowledge.common.Operations;
-import com.tom.web.knowledge.common.ServiceLogger;
-import com.tom.web.knowledge.exception.AlreadyExistsException;
-import com.tom.web.knowledge.exception.IllegalStatusException;
-import com.tom.web.knowledge.exception.NotFoundException;
+import com.tom.service.knowledges.common.UserEntityUpdate;
+import com.tom.service.knowledges.common.SystemUtils;
+import com.tom.service.knowledges.common.ServiceLogger;
+import com.tom.service.knowledges.exception.AlreadyExistsException;
+import com.tom.service.knowledges.exception.IllegalStatusException;
+import com.tom.service.knowledges.exception.NotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,8 +38,8 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final AuthenticationMapper mapper;
 	private final UserRepository repository;
-	private final Operations operations;
-	private final EntityUpdater updater;
+	private final SystemUtils operations;
+	private final UserEntityUpdate updater;
 	private final JwtService jwtService;
 	
 	public UserResponse getCurrentUser(Principal connectedUser) {

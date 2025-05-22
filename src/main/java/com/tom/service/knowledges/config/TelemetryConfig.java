@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.config;
+package com.tom.service.knowledges.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

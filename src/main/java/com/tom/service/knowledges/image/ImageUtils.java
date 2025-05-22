@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import com.tom.aws.awstest.common.ServiceLogger;
-import com.tom.aws.awstest.exception.ConflictException;
-import com.tom.aws.awstest.exception.NotFoundException;
+import com.tom.service.knowledges.common.ServiceLogger;
+import com.tom.service.knowledges.exception.ConflictException;
+import com.tom.service.knowledges.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 

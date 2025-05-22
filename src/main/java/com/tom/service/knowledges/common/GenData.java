@@ -1,9 +1,9 @@
 package com.tom.service.knowledges.common;
 
-import com.tom.aws.awstest.product.Product;
-
 public class GenData extends GenerateDataUtil {
 
+	/*
+	
 	public Product genProduct() {
 		Product pro = new Product();
 
@@ -21,4 +21,5 @@ public class GenData extends GenerateDataUtil {
 	}
 	
 	
+	*/
 }

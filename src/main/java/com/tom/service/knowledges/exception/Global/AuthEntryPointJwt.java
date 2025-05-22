@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.exception;
+package com.tom.service.knowledges.exception.Global;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tom.web.knowledge.common.ServiceLogger;
+import com.tom.service.knowledges.common.ServiceLogger;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

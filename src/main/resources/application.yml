@@ -1,8 +1,8 @@
 spring:
   profiles:
-    active: actuator, console, database, service
+    active: actuator, console, database, service #loki-enabled
   application:
-      name: connectionTester
+      name: knowledge
 
 tracing:
   enabled: false

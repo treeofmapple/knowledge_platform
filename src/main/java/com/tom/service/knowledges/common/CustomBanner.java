@@ -1,11 +1,9 @@
-package com.tom.web.knowledge.common;
+package com.tom.service.knowledges.common;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import org.springframework.boot.Banner;
@@ -15,6 +13,8 @@ import org.springframework.core.io.ClassPathResource;
 
 public class CustomBanner implements Banner {
 
+	private SystemUtils utils;
+	
 	@Override
 	public void printBanner(Environment environment, Class<?> sourceClass, PrintStream out) {
 		getPathResource(out);
@@ -26,7 +26,7 @@ public class CustomBanner implements Banner {
             String serverPort = environment.getProperty("server.port", "8080");
             String profiles = String.join(", ", environment.getActiveProfiles());
             String protocol = sslEnabled ? "https" : "http";
-            String ip = getPublicIp();
+            String ip = utils.getPublicIp();
             
             out.println();
             out.println("Powered by Spring Boot: " + version);
@@ -39,24 +39,6 @@ public class CustomBanner implements Banner {
             out.println("Failed to print custom banner: " + e.getMessage());
         }
     }
-	
-	private String getPublicIp() {
-	    String publicIp = "Unknown";
-	    try {
-	        @SuppressWarnings("deprecation")
-			URL url = new URL("https://ifconfig.me");
-	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-	        connection.setRequestMethod("GET");
-	        connection.setRequestProperty("User-Agent", "curl");
-
-	        try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
-	            publicIp = reader.readLine();
-	        }
-	    } catch (IOException e) {
-	        ServiceLogger.error(e.getMessage());
-	    }
-	    return publicIp;
-	}
 	
 	private void getPathResource(PrintStream out) {
 		ClassPathResource resource = new ClassPathResource("banner/banner.txt");

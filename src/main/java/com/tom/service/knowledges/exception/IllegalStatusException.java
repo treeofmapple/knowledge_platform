@@ -1,6 +1,6 @@
-package com.tom.web.knowledge.exception;
+package com.tom.service.knowledges.exception;
 
-import com.tom.web.knowledge.exception.Global.IllegalGlobalException;
+import com.tom.service.knowledges.exception.Global.IllegalGlobalException;
 
 import lombok.EqualsAndHashCode;
 

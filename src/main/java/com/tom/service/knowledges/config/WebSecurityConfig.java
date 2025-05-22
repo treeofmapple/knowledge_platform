@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.config;
+package com.tom.service.knowledges.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,9 +13,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.tom.web.knowledge.common.WhitelistLoader;
-import com.tom.web.knowledge.exception.AuthEntryPointJwt;
-import com.tom.web.knowledge.security.JwtAuthenticationFilter;
+import com.tom.service.knowledges.common.WhitelistLoader;
+import com.tom.service.knowledges.exception.Global.AuthEntryPointJwt;
+import com.tom.service.knowledges.security.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
 

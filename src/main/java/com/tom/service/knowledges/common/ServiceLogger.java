@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.common;
+package com.tom.service.knowledges.common;
 
 import lombok.extern.slf4j.Slf4j;
 

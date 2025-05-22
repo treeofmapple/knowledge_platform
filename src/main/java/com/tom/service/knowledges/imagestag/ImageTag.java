@@ -1,7 +1,7 @@
 package com.tom.service.knowledges.imagestag;
 
-import com.tom.aws.awstest.image.Image;
-import com.tom.aws.awstest.models.Auditable;
+import com.tom.service.knowledges.image.Image;
+import com.tom.service.knowledges.model.Auditable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
