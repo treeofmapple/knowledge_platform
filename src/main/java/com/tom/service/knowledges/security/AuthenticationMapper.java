@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.security;
+package com.tom.service.knowledges.security;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

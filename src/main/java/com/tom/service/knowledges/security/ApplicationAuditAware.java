@@ -1,4 +1,4 @@
-package com.tom.web.knowledge.security;
+package com.tom.service.knowledges.security;
 
 import java.util.Optional;
 import java.util.UUID;

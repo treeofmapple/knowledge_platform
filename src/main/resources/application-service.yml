@@ -1,0 +1,10 @@
+application:
+  security:
+    user: ${SECURITY_USER:admin}
+    password: ${SECURITY_PASSWORD:password}
+
+cloud:
+  aws:
+    region: ${AWS_REGION}
+    bucket: ${AWS_BUCKET}
+    accelerate-enabled: ${S3-ACCELERATION:false}

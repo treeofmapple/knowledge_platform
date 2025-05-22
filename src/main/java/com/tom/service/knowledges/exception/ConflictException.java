@@ -6,13 +6,13 @@ import lombok.EqualsAndHashCode;
 
 @SuppressWarnings("serial")
 @EqualsAndHashCode(callSuper = true)
-public class DuplicateException extends CustomGlobalException {
-	
-	public DuplicateException(String msg) {
+public class ConflictException extends CustomGlobalException {
+
+	public ConflictException(String msg) {
 		super(msg);
 	}
 	
-	public DuplicateException(String msg, Throwable cause) {
+	public ConflictException(String msg, Throwable cause) {
 		super(msg, cause);
 	}
 	
