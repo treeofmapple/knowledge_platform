@@ -1,5 +1,5 @@
 package com.tom.service.knowledges.notes;
 
-public class NotesController {
+public class NoteController {
 
 }

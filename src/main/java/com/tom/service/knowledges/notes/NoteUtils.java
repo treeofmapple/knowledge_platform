@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class NotesUtils {
+public class NoteUtils {
 
-	private final NotesRepository repository;
+	private final NoteRepository repository;
 	
 	
 	

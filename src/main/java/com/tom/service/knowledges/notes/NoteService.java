@@ -1,5 +1,5 @@
 package com.tom.service.knowledges.notes;
 
-public class NotesService {
+public class NoteService {
 
 }
