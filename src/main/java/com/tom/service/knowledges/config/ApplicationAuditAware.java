@@ -1,4 +1,4 @@
-package com.tom.service.knowledges.security;
+package com.tom.service.knowledges.config;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -7,6 +7,8 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.tom.service.knowledges.user.User;
 
 public class ApplicationAuditAware implements AuditorAware<UUID> {
 

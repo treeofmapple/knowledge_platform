@@ -14,8 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.tom.service.knowledges.exception.NotFoundException;
-import com.tom.service.knowledges.security.ApplicationAuditAware;
-import com.tom.service.knowledges.security.UserRepository;
+import com.tom.service.knowledges.user.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,8 +26,7 @@ public class ApplicationConfig {
 
 	@Bean
 	UserDetailsService userDetailsService() {
-	    return username -> repository.findByUsername(username)
-	        .or(() -> repository.findByEmail(username))
+	    return username -> repository.findByUsernameOrEmail(username)
 	        .orElseThrow(() -> new NotFoundException("User not found"));
 	}
 	

@@ -1,7 +1,5 @@
 package com.tom.service.knowledges.attachments;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +21,9 @@ public class AttachmentController {
 
 	private final AttachmentService service;
 	
-	@GetMapping(value = "/get/all", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<AttachmentResponse>> searchAllObjects() {
-		var response = service.findAll();
+	@GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<AttachmentResponse> searchObjectByName(@RequestParam("name") String image) {
+		var response = service.findObjectByName(image);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
@@ -34,7 +32,7 @@ public class AttachmentController {
 		var response = service.findObjectByName(image);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
-
+	
 	@PostMapping(value = "/upload",
 			consumes = MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)

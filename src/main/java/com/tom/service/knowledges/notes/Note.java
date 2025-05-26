@@ -7,6 +7,7 @@ import com.tom.service.knowledges.attachments.Attachment;
 import com.tom.service.knowledges.image.Image;
 import com.tom.service.knowledges.model.Auditable;
 import com.tom.service.knowledges.tag.Tag;
+import com.tom.service.knowledges.user.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -22,6 +23,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -59,7 +61,7 @@ public class Note extends Auditable {
 			unique = false)
 	private byte[] annotation;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "image_id")
 	private Image image;
 
@@ -77,4 +79,8 @@ public class Note extends Auditable {
 	      inverseJoinColumns = { @JoinColumn(name = "tag_id") })
 	private Set<Tag> tags = new HashSet<>();
 	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 }

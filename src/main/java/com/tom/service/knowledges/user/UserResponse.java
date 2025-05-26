@@ -1,4 +1,4 @@
-package com.tom.service.knowledges.security;
+package com.tom.service.knowledges.user;
 
 public record UserResponse(
 		

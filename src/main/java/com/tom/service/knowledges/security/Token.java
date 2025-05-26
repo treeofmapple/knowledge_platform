@@ -1,6 +1,7 @@
 package com.tom.service.knowledges.security;
 
 import com.tom.service.knowledges.model.Auditable;
+import com.tom.service.knowledges.user.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

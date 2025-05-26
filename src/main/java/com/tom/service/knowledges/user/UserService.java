@@ -1,4 +1,4 @@
-package com.tom.service.knowledges.security;
+package com.tom.service.knowledges.user;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -12,12 +12,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tom.service.knowledges.common.UserEntityUpdate;
-import com.tom.service.knowledges.common.SystemUtils;
 import com.tom.service.knowledges.common.ServiceLogger;
+import com.tom.service.knowledges.common.SystemUtils;
+import com.tom.service.knowledges.common.UserEntityUpdate;
 import com.tom.service.knowledges.exception.AlreadyExistsException;
 import com.tom.service.knowledges.exception.IllegalStatusException;
 import com.tom.service.knowledges.exception.NotFoundException;
+import com.tom.service.knowledges.security.AuthenticationMapper;
+import com.tom.service.knowledges.security.AuthenticationRequest;
+import com.tom.service.knowledges.security.AuthenticationResponse;
+import com.tom.service.knowledges.security.JwtService;
+import com.tom.service.knowledges.security.PasswordRequest;
+import com.tom.service.knowledges.security.RegisterRequest;
+import com.tom.service.knowledges.security.Role;
+import com.tom.service.knowledges.security.UpdateRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -52,7 +60,7 @@ public class UserService {
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 		ServiceLogger.info("IP {}, user {}, is searching for: {}", operations.getUserIp(), user.getUsername(), userInfo);
 
-		var users = repository.findByUsernameOrEmailContainingIgnoreCase(userInfo);
+		var users = repository.findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCase(userInfo);
 		if (users.isEmpty()) {
 			throw new NotFoundException("No users found matching: " + userInfo);
 		}
@@ -126,7 +134,7 @@ public class UserService {
 	public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
 		String userIdentifier = request.userinfo();
 
-		var user = repository.findByUsername(userIdentifier).or(() -> repository.findByEmail(userIdentifier))
+		var user = repository.findByUsernameOrEmail(userIdentifier)
 				.orElseThrow(() -> new NotFoundException("Username or email wasn't found"));
 	    
 		authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), request.password()));
@@ -152,7 +160,7 @@ public class UserService {
 		refreshToken = authHeader.substring(7);
 		userInfo = jwtService.extractUsername(refreshToken);
 		if (userInfo != null) {
-			var user = repository.findByUsername(userInfo).or(() -> repository.findByEmail(userInfo))
+			var user = repository.findByUsernameOrEmail(userInfo)
 					.orElseThrow(() -> new NotFoundException("User username or email not found"));
 			if (jwtService.isTokenValid(refreshToken, user)) {
 				var accessToken = jwtService.generateToken(user);

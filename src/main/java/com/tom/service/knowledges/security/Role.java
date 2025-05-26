@@ -4,10 +4,6 @@ import static com.tom.service.knowledges.security.Permission.ADMIN_CREATE;
 import static com.tom.service.knowledges.security.Permission.ADMIN_DELETE;
 import static com.tom.service.knowledges.security.Permission.ADMIN_READ;
 import static com.tom.service.knowledges.security.Permission.ADMIN_UPDATE;
-import static com.tom.service.knowledges.security.Permission.MANAGER_CREATE;
-import static com.tom.service.knowledges.security.Permission.MANAGER_DELETE;
-import static com.tom.service.knowledges.security.Permission.MANAGER_READ;
-import static com.tom.service.knowledges.security.Permission.MANAGER_UPDATE;
 import static com.tom.service.knowledges.security.Permission.USER_CREATE;
 import static com.tom.service.knowledges.security.Permission.USER_DELETE;
 import static com.tom.service.knowledges.security.Permission.USER_READ;
@@ -39,26 +35,10 @@ public enum Role {
 			ADMIN_UPDATE,
 			ADMIN_DELETE,
 			ADMIN_CREATE,
-			MANAGER_READ,
-			MANAGER_UPDATE,
-			MANAGER_CREATE,
-			MANAGER_DELETE,
 			USER_READ,
 			USER_UPDATE,
 			USER_DELETE,
 			USER_CREATE
-		)
-	),
-	MANAGER(Set.of(
-			MANAGER_READ,
-			MANAGER_UPDATE,
-			MANAGER_CREATE,
-			MANAGER_DELETE,
-			USER_READ,
-			USER_UPDATE,
-			USER_DELETE,
-			USER_CREATE
-			
 		)
 	)
 	;

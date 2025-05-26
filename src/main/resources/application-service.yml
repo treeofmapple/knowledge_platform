@@ -1,10 +1,12 @@
 application:
   security:
-    user: ${SECURITY_USER:admin}
-    password: ${SECURITY_PASSWORD:password}
+    secret-key: ${SECRET_KEY}
+    expiration: ${EXPIRATION_TIME:1H}
+  refresh-token: 
+    expiration: ${REFRESH_TIME:7D}
+
 
 cloud:
   aws:
     region: ${AWS_REGION}
     bucket: ${AWS_BUCKET}
-    accelerate-enabled: ${S3-ACCELERATION:false}

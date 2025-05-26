@@ -15,7 +15,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.tom.service.knowledges.common.WhitelistLoader;
 import com.tom.service.knowledges.exception.Global.AuthEntryPointJwt;
-import com.tom.service.knowledges.security.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
 

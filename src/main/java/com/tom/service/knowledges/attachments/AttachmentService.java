@@ -33,24 +33,18 @@ public class AttachmentService {
 	
 	// Upgrade based on the image repository
 
-	public List<AttachmentResponse> findAll() {
-		String userIp = utils.getUserIp();
-		ServiceLogger.info("IP {} is searching for all objects", userIp);
-		return repoCall.findObjectList().stream().map(mapper::fromImage).collect(Collectors.toList());
-	}
-	
 	public AttachmentPageResponse findAll(int page){
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
 		Page<Attachment> imagePage = repository.findAll(pageable);
 		return mapper.fromPage(repoCall.findObjectListPaged(imagePage), imagePage.getTotalPages(), imagePage.getSize(), imagePage.getTotalPages());
-	}
+	} // fix this 
 	
 	public AttachmentResponse findObjectByName(String name) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is searching for object by name: {}", userIp, name);
 		var image = repoCall.findObject(name);
 		return mapper.fromImage(image);
-	}
+	} // fix this
 	
 	@Transactional
 	public AttachmentResponse uploadObject(MultipartFile file) {
@@ -78,46 +72,6 @@ public class AttachmentService {
 		repoCall.ensureObjectNotExist(name);
 		Attachment images = repoCall.findObject(name);
 		return functions.objectAsBytes(images);
-	}
-	
-	// tweak to upload error per item
-	@Transactional
-	public List<AttachmentResponse> uploadMultiple(MultipartFile[] files) {
-		String userIp = utils.getUserIp();
-		ServiceLogger.info("IP {} is uploading an image", userIp);
-	    List<AttachmentResponse> responses = new ArrayList<>();
-
-	    for (MultipartFile file : files) {
-	        String key = "images/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
-	        functions.putObject(key, file);
-	        String s3Url = functions.buildS3Url(key);
-            var image = new Attachment();
-            repoCall.mergeData(image, file.getOriginalFilename(), key, s3Url, file.getContentType(), file.getSize());
-            repository.save(image);
-
-            responses.add(mapper.fromImage(image));
-
-	    }
-
-	    return responses;
-	}
-
-	// tweak to download error per item
-	@Transactional
-	public byte[][] downloadMultiple(List<String> names) {
-	    String userIp = utils.getUserIp();
-	    ServiceLogger.info("IP {} is downloading multiple objects: {}", userIp, names);
-
-	    byte[][] result = new byte[names.size()][];
-
-	    for (int i = 0; i < names.size(); i++) {
-	        String name = names.get(i);
-			Attachment images = repoCall.findObject(name);
-	        
-	        result[i] = functions.objectAsBytes(images);
-	    }
-
-	    return result;
 	}
 	
 	@Transactional

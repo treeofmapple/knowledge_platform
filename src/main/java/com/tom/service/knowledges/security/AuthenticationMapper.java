@@ -6,6 +6,9 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
+import com.tom.service.knowledges.user.User;
+import com.tom.service.knowledges.user.UserResponse;
+
 @Service
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface AuthenticationMapper {

@@ -7,7 +7,7 @@ import com.tom.service.knowledges.security.AuthenticationMapper;
 import com.tom.service.knowledges.security.TokenRepository;
 import com.tom.service.knowledges.security.TokenType;
 import com.tom.service.knowledges.security.UpdateRequest;
-import com.tom.service.knowledges.security.User;
+import com.tom.service.knowledges.user.User;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.tom.service.knowledges.security;
+package com.tom.service.knowledges.config;
 
 import java.io.IOException;
 
@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.tom.service.knowledges.exception.InternalException;
+import com.tom.service.knowledges.security.JwtService;
+import com.tom.service.knowledges.security.TokenRepository;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

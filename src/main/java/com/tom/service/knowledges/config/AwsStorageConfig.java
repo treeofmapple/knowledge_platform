@@ -2,21 +2,12 @@ package com.tom.service.knowledges.config;
 
 import org.springframework.context.annotation.Configuration;
 
-import com.tom.service.knowledges.common.ServiceLogger;
-
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.AccelerateConfiguration;
-import software.amazon.awssdk.services.s3.model.BucketAccelerateStatus;
-import software.amazon.awssdk.services.s3.model.BucketVersioningStatus;
-import software.amazon.awssdk.services.s3.model.PutBucketAccelerateConfigurationRequest;
-import software.amazon.awssdk.services.s3.model.PutBucketVersioningRequest;
-import software.amazon.awssdk.services.s3.model.S3Exception;
-import software.amazon.awssdk.services.s3.model.VersioningConfiguration;
 
 @Configuration
 @RequiredArgsConstructor
@@ -34,11 +25,17 @@ public class AwsStorageConfig {
                 .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
                 .build();
 
+        
+        /*
         if(properties.isAccelerateEnabled()) {
         	enableAccelerateMode();
         }
         enableVersioning();
+        
+        */
     }
+    
+    /*
     
 	private void enableAccelerateMode() {
         try {
@@ -70,6 +67,7 @@ public class AwsStorageConfig {
 		}
     }
 	
+	*/
 
     public String getBucketName() {
         return properties.getBucket();
