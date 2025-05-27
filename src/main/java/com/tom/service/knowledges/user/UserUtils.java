@@ -1,4 +1,4 @@
-package com.tom.service.knowledges.common;
+package com.tom.service.knowledges.user;
 
 import org.springframework.stereotype.Component;
 
@@ -7,13 +7,12 @@ import com.tom.service.knowledges.security.AuthenticationMapper;
 import com.tom.service.knowledges.security.TokenRepository;
 import com.tom.service.knowledges.security.TokenType;
 import com.tom.service.knowledges.security.UpdateRequest;
-import com.tom.service.knowledges.user.User;
 
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class UserEntityUpdate {
+public class UserUtils {
 
 	private final TokenRepository tokenRepository;
 	private final AuthenticationMapper mapper;

@@ -20,7 +20,8 @@ public interface AttachmentMapper {
 	@Mapping(source = "size", target = "size")
 	@Mapping(source = "createdAt", target = "createdAt")
 	@Mapping(source = "updatedAt", target = "updatedAt")
-	AttachmentResponse fromImage(Attachment image);
+	AttachmentResponse fromResponse(Attachment image);
 
-	AttachmentPageResponse fromPage(List<AttachmentResponse> imagePage, int page, int size, int totalPages);
+	AttachmentPageResponse fromPageResponse(List<AttachmentResponse> imagePage, int page, int size, int totalPages);
+
 }

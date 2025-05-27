@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtService {
 
-	private final SystemUtils operations;
+	private final SystemUtils utils;
 
     @Value("${application.security.secret-key}")
     private String secretKey;
@@ -40,11 +40,11 @@ public class JwtService {
 	}
 	
 	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails ) {
-		return buildToken(extraClaims, userDetails, operations.parseDuration(jwtExpiration));
+		return buildToken(extraClaims, userDetails, utils.parseDuration(jwtExpiration));
 	}
 	
 	public String generateRefreshToken(UserDetails userDetails) {
-		return buildToken(new HashMap<>(), userDetails, operations.parseDuration(refreshExpiration));
+		return buildToken(new HashMap<>(), userDetails, utils.parseDuration(refreshExpiration));
 	}
 	
 	public boolean isTokenValid(String token, UserDetails userDetails){

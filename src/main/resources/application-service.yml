@@ -4,7 +4,8 @@ application:
     expiration: ${EXPIRATION_TIME:1H}
   refresh-token: 
     expiration: ${REFRESH_TIME:7D}
-
+  page:
+    size: ${PAGE_SIZE:10}
 
 cloud:
   aws:

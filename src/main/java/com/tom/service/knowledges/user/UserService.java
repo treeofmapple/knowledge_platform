@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tom.service.knowledges.common.ServiceLogger;
 import com.tom.service.knowledges.common.SystemUtils;
-import com.tom.service.knowledges.common.UserEntityUpdate;
 import com.tom.service.knowledges.exception.AlreadyExistsException;
 import com.tom.service.knowledges.exception.IllegalStatusException;
 import com.tom.service.knowledges.exception.NotFoundException;
@@ -47,7 +46,7 @@ public class UserService {
 	private final AuthenticationMapper mapper;
 	private final UserRepository repository;
 	private final SystemUtils operations;
-	private final UserEntityUpdate updater;
+	private final UserUtils utils;
 	private final JwtService jwtService;
 	
 	public UserResponse getCurrentUser(Principal connectedUser) {
@@ -74,7 +73,7 @@ public class UserService {
 		if (!request.password().equals(request.confirmPassword())) {
 			throw new IllegalStatusException("Wrong Password");
 		}
-		var data = updater.mergeData(user, request);
+		var data = utils.mergeData(user, request);
 		repository.save(data);
 		ServiceLogger.info("IP {}, user {} changed their password", operations.getUserIp(), user.getUsername());
 	}
@@ -82,7 +81,7 @@ public class UserService {
 	// logout connected user
 	public void logout(Principal connectedUser) {
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-		updater.revokeAllUserTokens(user);
+		utils.revokeAllUserTokens(user);
 		ServiceLogger.info("IP {}, user {} has logged out. All valid tokens revoked.", operations.getUserIp(), user.getUsername());
 	}
 
@@ -123,7 +122,7 @@ public class UserService {
 		
 		var jwtToken = jwtService.generateToken(user);
 		var refreshToken = jwtService.generateRefreshToken(user);
-		updater.saveUserToken(savedUser, jwtToken);
+		utils.saveUserToken(savedUser, jwtToken);
 
 		ServiceLogger.info("IP {}, user registered: {}", operations.getUserIp(), request.username());
 		var response = mapper.buildResponse(jwtToken, refreshToken);
@@ -141,8 +140,8 @@ public class UserService {
 
 		var jwtToken = jwtService.generateToken(user);
 		var refreshToken = jwtService.generateRefreshToken(user);
-		updater.revokeAllUserTokens(user);
-		updater.saveUserToken(user, jwtToken);
+		utils.revokeAllUserTokens(user);
+		utils.saveUserToken(user, jwtToken);
 		ServiceLogger.info("IP {}, user authenticated: {}", operations.getUserIp(), userIdentifier);
 
 		var responses = mapper.buildResponse(jwtToken, refreshToken);
@@ -164,8 +163,8 @@ public class UserService {
 					.orElseThrow(() -> new NotFoundException("User username or email not found"));
 			if (jwtService.isTokenValid(refreshToken, user)) {
 				var accessToken = jwtService.generateToken(user);
-				updater.revokeAllUserTokens(user);
-				updater.saveUserToken(user, accessToken);
+				utils.revokeAllUserTokens(user);
+				utils.saveUserToken(user, accessToken);
 				var authResponse = mapper.buildResponse(accessToken, refreshToken);
 				new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
 				ServiceLogger.info("Access token refreshed for user {}", userInfo);
@@ -176,7 +175,7 @@ public class UserService {
 	@Transactional
 	public String deleteMe(Principal connectedUser) {
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-		updater.revokeAllUserTokens(user);
+		utils.revokeAllUserTokens(user);
 		repository.deleteById(user.getId());
 		ServiceLogger.info("IP {}, user {} has deleted their account", operations.getUserIp(), user.getUsername());
 		return "The user" + user.getUsername() + "was deleted";

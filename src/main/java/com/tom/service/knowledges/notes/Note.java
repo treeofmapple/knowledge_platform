@@ -73,10 +73,12 @@ public class Note extends Auditable {
 	)
 	private Set<Attachment> attachment = new HashSet<>();
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-		@JoinTable(name = "note_tags",
-	      joinColumns = { @JoinColumn(name = "note_id") },
-	      inverseJoinColumns = { @JoinColumn(name = "tag_id") })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { 
+			CascadeType.PERSIST, 
+			CascadeType.MERGE })
+	@JoinTable(name = "note_tags", 
+			joinColumns = {@JoinColumn(name = "note_id")},
+			inverseJoinColumns = {@JoinColumn(name = "tag_id")})
 	private Set<Tag> tags = new HashSet<>();
 	
 	

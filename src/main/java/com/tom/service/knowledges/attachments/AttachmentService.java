@@ -36,14 +36,14 @@ public class AttachmentService {
 	public AttachmentPageResponse findAll(int page){
 		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
 		Page<Attachment> imagePage = repository.findAll(pageable);
-		return mapper.fromPage(repoCall.findObjectListPaged(imagePage), imagePage.getTotalPages(), imagePage.getSize(), imagePage.getTotalPages());
+		return mapper.fromPageResponse(repoCall.findObjectListPaged(imagePage), imagePage.getTotalPages(), imagePage.getSize(), imagePage.getTotalPages());
 	} // fix this 
 	
 	public AttachmentResponse findObjectByName(String name) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is searching for object by name: {}", userIp, name);
 		var image = repoCall.findObject(name);
-		return mapper.fromImage(image);
+		return mapper.fromResponse(image);
 	} // fix this
 	
 	@Transactional
@@ -53,15 +53,13 @@ public class AttachmentService {
 		String key = "images/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
 	    
 		repoCall.ensureObjectExist(file.getOriginalFilename());
-		
 		functions.putObject(key, file);
-		
 		String s3Url = functions.buildS3Url(key);
 		
 		var image = new Attachment();
 	    repoCall.mergeData(image, file.getOriginalFilename(), key, s3Url, file.getContentType(), file.getSize());
 	    repository.save(image);
-	    return mapper.fromImage(image);
+	    return mapper.fromResponse(image);
 	}
 	
 	@Transactional
@@ -100,7 +98,7 @@ public class AttachmentService {
 		repoCall.mergeData(images, newKey, newUrl);
 	    repository.save(images);
 		
-		return mapper.fromImage(images);
+		return mapper.fromResponse(images);
 	}
 	
 }

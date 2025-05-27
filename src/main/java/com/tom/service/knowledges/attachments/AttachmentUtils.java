@@ -19,26 +19,16 @@ public class AttachmentUtils {
 	private final AttachmentRepository repository;
 	private final AttachmentMapper mapper;
 	
-	public List<Attachment> findObjectList() {
-		List<Attachment> image = repository.findAll();
-		if(image.isEmpty()) {
-			String message = "No products found in the database";
-			ServiceLogger.warn(message);
-			throw new NotFoundException(message);
-		}
-		return image;
-	}
-	
 	public List<AttachmentResponse> findObjectListPaged(Page<Attachment> imagePage) {
 		List<AttachmentResponse> content = imagePage
 				.stream()
-				.map(mapper::fromImage)
+				.map(mapper::fromResponse)
 				.collect(Collectors.toList());
 		return content;
 	}
 	
 	public Attachment findObject(String name) {
-		return repository.findByNameContainingIgnoreCase(name).orElseThrow(() -> {
+		return repository.findByNameIgnoreCase(name).orElseThrow(() -> {
             String message = String.format("Image with name %s not found", name);
             ServiceLogger.error(message);
             return new NotFoundException(message);
