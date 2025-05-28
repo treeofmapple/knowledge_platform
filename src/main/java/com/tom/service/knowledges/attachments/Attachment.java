@@ -71,8 +71,7 @@ public class Attachment extends Auditable {
 	private Boolean archivated = false;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "note_id",
-			nullable = false)
+	@JoinColumn(name = "note_id", nullable = false)
 	private Note notes;
     
 }

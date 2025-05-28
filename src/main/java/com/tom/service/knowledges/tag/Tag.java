@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true, exclude = "notes")
 // @Cacheable
 // @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@Table(name = "tag", indexes = {
+@Table(name = "tags", indexes = {
 		@Index(name = "idx_tag_name", columnList = "tag_name")
 })
 public class Tag extends Auditable {
@@ -42,7 +42,7 @@ public class Tag extends Auditable {
 		unique = true)
 	private String name;
 	
-	@ManyToMany(mappedBy = "notes", fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
 	private Set<Note> notes = new HashSet<>();
 	
 }

@@ -58,6 +58,6 @@ public class AttachmentController {
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<String> deleteObject(@RequestParam("name") String images) {
 		var response = service.deleteObject(images);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+		return ResponseEntity	.status(HttpStatus.NO_CONTENT).body(response);
 	}
 }

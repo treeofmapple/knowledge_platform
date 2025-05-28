@@ -35,7 +35,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "note", indexes = {
+@Table(name = "notes", indexes = {
 		@Index(name = "idx_note_name", columnList = "note_name")
 })
 public class Note extends Auditable {
@@ -66,23 +66,23 @@ public class Note extends Auditable {
 	private Image image;
 
 	@OneToMany(
-		mappedBy = "note",
-		cascade = CascadeType.ALL,
-		orphanRemoval = true,
-		fetch = FetchType.LAZY
+			mappedBy = "notes",
+			cascade = CascadeType.ALL,
+			orphanRemoval = true,
+			fetch = FetchType.LAZY
 	)
-	private Set<Attachment> attachment = new HashSet<>();
+	private Set<Attachment> attachments = new HashSet<>();
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { 
 			CascadeType.PERSIST, 
 			CascadeType.MERGE })
-	@JoinTable(name = "note_tags", 
-			joinColumns = {@JoinColumn(name = "note_id")},
-			inverseJoinColumns = {@JoinColumn(name = "tag_id")})
+	@JoinTable(name = "notes_tags", 
+			joinColumns = {@JoinColumn(name = "notes_id")},
+			inverseJoinColumns = {@JoinColumn(name = "tags_id")})
 	private Set<Tag> tags = new HashSet<>();
 	
-	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "users_id", nullable = false)
 	private User user;
+	
 }
