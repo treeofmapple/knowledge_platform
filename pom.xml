@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.6</version>
+		<version>3.5.0</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.tom.service</groupId>
@@ -37,7 +37,6 @@
 		<java.version>21</java.version>
 		<jjwt-token>0.11.5</jjwt-token> <!-- 0.12.6 -->
 		<mapstruct.version>1.6.2</mapstruct.version>
-		<bucket4j.version>8.10.1</bucket4j.version>
 		<datafaker.version>2.4.2</datafaker.version>
 	</properties>
 
@@ -63,41 +62,11 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- Observation -->
-		<dependency>
-			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-registry-prometheus</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.github.loki4j</groupId>
-			<artifactId>loki-logback-appender</artifactId>
-			<version>1.5.1</version>
-		</dependency>
-		<dependency>
-			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-tracing</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.opentelemetry</groupId>
-			<artifactId>opentelemetry-exporter-otlp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.micrometer</groupId>
-			<artifactId>micrometer-tracing-bridge-otel</artifactId>
-		</dependency>
-
-		<!-- Bucket4j -->
-		<dependency>
-			<groupId>com.bucket4j</groupId>
-			<artifactId>bucket4j-core</artifactId>
-			<version>${bucket4j.version}</version>
-		</dependency>
-
 		<!-- AWS Bucket S3 -->
 		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>s3</artifactId>
-			<version>2.25.12</version> <!-- Use the latest version -->
+			<version>2.25.12</version>
 		</dependency>
 
 		<!-- JJWT Token -->
@@ -145,11 +114,6 @@
 
 		<!-- Databases -->
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
@@ -178,6 +142,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>${project.artifactId}</finalName>
 		<plugins>
 			<!-- Compilation Plugin -->
 			<plugin>
@@ -218,8 +183,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				
+				<configuration>
+					<classifier>spring-boot</classifier>
+				</configuration>
+				
 				<executions>
 					<execution>
+						<id>spring-boot-repackage</id>
 						<goals>
 							<goal>build-info</goal>
 						</goals>

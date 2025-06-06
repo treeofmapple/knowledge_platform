@@ -83,5 +83,30 @@
     "name": "application.page.size",
     "type": "java.lang.String",
     "description": "A description for 'application.page.size'"
+  },
+  {
+    "name": "aws.r2.endpoint",
+    "type": "java.lang.String",
+    "description": "A description for 'aws.r2.endpoint'"
+  },
+  {
+    "name": "aws.r2.secret-access-key",
+    "type": "java.lang.String",
+    "description": "A description for 'aws.r2.secret-access-key'"
+  },
+  {
+    "name": "aws.r2.bucket-name",
+    "type": "java.lang.String",
+    "description": "A description for 'aws.r2.bucket-name'"
+  },
+  {
+    "name": "aws.r2.region",
+    "type": "java.lang.String",
+    "description": "A description for 'aws.r2.region'"
+  },
+  {
+    "name": "aws.r2.access-key-id",
+    "type": "java.lang.String",
+    "description": "A description for 'aws.r2.access-key-id'"
   }
 ]}

@@ -24,8 +24,6 @@ import lombok.NoArgsConstructor;
 	    @Index(name = "idx_image_name_unique",
 	            columnList = "attachment_name", 
 	            unique = true),
-	    @Index(name = "idx_image_archivated",
-	            columnList = "archivated"),
 	    @Index(name = "idx_image_content_type",
 	            columnList = "content_type"),
 	    @Index(name = "idx_image_created_date",

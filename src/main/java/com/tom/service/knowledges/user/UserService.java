@@ -3,6 +3,7 @@ package com.tom.service.knowledges.user;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -21,10 +22,7 @@ import com.tom.service.knowledges.security.AuthenticationMapper;
 import com.tom.service.knowledges.security.AuthenticationRequest;
 import com.tom.service.knowledges.security.AuthenticationResponse;
 import com.tom.service.knowledges.security.JwtService;
-import com.tom.service.knowledges.security.PasswordRequest;
-import com.tom.service.knowledges.security.RegisterRequest;
 import com.tom.service.knowledges.security.Role;
-import com.tom.service.knowledges.security.UpdateRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -51,7 +49,7 @@ public class UserService {
 	
 	public UserResponse getCurrentUser(Principal connectedUser) {
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-		return mapper.buildUserResponse(user);
+		return mapper.toUserResponse(user);
 	}
 
 	// get user by name or email
@@ -63,7 +61,7 @@ public class UserService {
 		if (users.isEmpty()) {
 			throw new NotFoundException("No users found matching: " + userInfo);
 		}
-		return users.stream().map(mapper::buildUserResponse).toList();
+		return users.stream().map(mapper::toUserResponse).collect(Collectors.toList());
 	}
 
 	// edit connected user
@@ -107,7 +105,7 @@ public class UserService {
 
 	@Transactional
 	public AuthenticationResponse register(RegisterRequest request) {
-		if (repository.existsByUsername(request.username()) || repository.existsByEmail(request.email())) {
+		if (repository.existsByUsernameOrEmail(request.username(), request.email())) {
 			throw new AlreadyExistsException("User already exists");
 		}
 
@@ -115,18 +113,17 @@ public class UserService {
 			throw new IllegalStatusException("Passwords are not the same");
 		}
 
-		var user = mapper.buildAttributes(request.name(), request.username(), request.age(), request.email(),
-				passwordEncoder.encode(request.password()));
+		var user = mapper.toUser(request);
+		user.setPassword(passwordEncoder.encode(request.password()));
 		user.setRole(Role.USER);
 		var savedUser = repository.save(user);
 		
-		var jwtToken = jwtService.generateToken(user);
-		var refreshToken = jwtService.generateRefreshToken(user);
+		var jwtToken = jwtService.generateToken(savedUser);
+		var refreshToken = jwtService.generateRefreshToken(savedUser);
 		utils.saveUserToken(savedUser, jwtToken);
 
 		ServiceLogger.info("IP {}, user registered: {}", operations.getUserIp(), request.username());
-		var response = mapper.buildResponse(jwtToken, refreshToken);
-		return response;
+		return mapper.toAuthenticationResponse(jwtToken, refreshToken);
 	}
 
 	@Transactional
@@ -144,8 +141,7 @@ public class UserService {
 		utils.saveUserToken(user, jwtToken);
 		ServiceLogger.info("IP {}, user authenticated: {}", operations.getUserIp(), userIdentifier);
 
-		var responses = mapper.buildResponse(jwtToken, refreshToken);
-		return responses;
+		return mapper.toAuthenticationResponse(jwtToken, refreshToken);
 	}
 
 	@Transactional
@@ -165,7 +161,7 @@ public class UserService {
 				var accessToken = jwtService.generateToken(user);
 				utils.revokeAllUserTokens(user);
 				utils.saveUserToken(user, accessToken);
-				var authResponse = mapper.buildResponse(accessToken, refreshToken);
+				var authResponse = mapper.toAuthenticationResponse(accessToken, refreshToken);
 				new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
 				ServiceLogger.info("Access token refreshed for user {}", userInfo);
 			}

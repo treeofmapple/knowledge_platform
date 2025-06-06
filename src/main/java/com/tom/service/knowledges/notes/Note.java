@@ -36,7 +36,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "notes", indexes = {
-		@Index(name = "idx_note_name", columnList = "note_name")
+		@Index(name = "idx_note_name", columnList = "note_name"),
+		@Index(name = "idx_note_annotation", columnList = "annotation")
 })
 public class Note extends Auditable {
 
@@ -45,12 +46,13 @@ public class Note extends Auditable {
 	private Long id;
 	
 	@Column(name = "note_name",
-		length = 150,
+		length = 120,
 		nullable = false, 
 		unique = true)
 	private String name;
 	
-	@Column(name = "description", 
+	@Column(name = "description",
+		length = 400,
 		nullable = true, 
 		unique = false)
 	private String description;
@@ -59,10 +61,12 @@ public class Note extends Auditable {
 	@Column(name = "annotation", 
 			nullable = true, 
 			unique = false)
+	// put all the text onto a byte file to be armazenated easily
 	private byte[] annotation;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "image_id")
+	// Must provide an image to be set to be show what project it is or no
 	private Image image;
 
 	@OneToMany(
@@ -71,6 +75,7 @@ public class Note extends Auditable {
 			orphanRemoval = true,
 			fetch = FetchType.LAZY
 	)
+	// can have attachments or no that is files images
 	private Set<Attachment> attachments = new HashSet<>();
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = { 
@@ -79,10 +84,13 @@ public class Note extends Auditable {
 	@JoinTable(name = "notes_tags", 
 			joinColumns = {@JoinColumn(name = "notes_id")},
 			inverseJoinColumns = {@JoinColumn(name = "tags_id")})
+	
+	// can be null no tag
 	private Set<Tag> tags = new HashSet<>();
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "users_id", nullable = false)
+	// it must be attached to an user
 	private User user;
 	
 }

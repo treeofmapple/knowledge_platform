@@ -27,12 +27,6 @@ public class AttachmentController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
-	@GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<AttachmentResponse> searchObjectByName(@RequestParam("name") String image) {
-		var response = service.findObjectByName(image);
-		return ResponseEntity.status(HttpStatus.OK).body(response);
-	}
-	
 	@PostMapping(value = "/upload",
 			consumes = MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tom.service.knowledges.security.AuthenticationRequest;
 import com.tom.service.knowledges.security.AuthenticationResponse;
-import com.tom.service.knowledges.security.RegisterRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -49,7 +49,7 @@ public class TagService {
 		tagUtils.ensureTagCanBeCreated(trimName);
 		
 		var newTag = mapper.build(trimName.toLowerCase());
-		var savedTag =repository.save(newTag);
+		var savedTag = repository.save(newTag);
 		
 		ServiceLogger.info("Tag created successfully with ID: {} ", savedTag.getId());
 		return mapper.toResponse(savedTag);

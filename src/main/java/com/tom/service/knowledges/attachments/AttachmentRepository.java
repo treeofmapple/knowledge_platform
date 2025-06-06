@@ -1,16 +1,11 @@
 package com.tom.service.knowledges.attachments;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository	
 public interface AttachmentRepository extends JpaRepository<Attachment, Long> {
-
-	Page<Attachment> findByArchivated(boolean archivated, Pageable pageable);
-	Page<Attachment> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
 	Optional<Attachment> findByName(String name);
 	

@@ -7,10 +7,13 @@ import lombok.Data;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "cloud.aws")
+@ConfigurationProperties(prefix = "aws.r2")
 public class AwsProperties {
  
-	private String region;
+	private String endpoint;
+	private String accessKeyId;
+	private String secretAccessKey;
     private String bucket;
-
+	private String region;
+	
 }

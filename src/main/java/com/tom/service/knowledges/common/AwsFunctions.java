@@ -6,13 +6,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tom.service.knowledges.attachments.Attachment;
-import com.tom.service.knowledges.config.AwsStorageConfig;
+import com.tom.service.knowledges.config.AwsProperties;
 import com.tom.service.knowledges.exception.DataTransferenceException;
 
 import lombok.RequiredArgsConstructor;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.exception.SdkClientException;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -23,21 +24,22 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 @RequiredArgsConstructor
 public class AwsFunctions {
 
-	private final AwsStorageConfig awsConfig;
+	private final AwsProperties awsProperties;
+	private final S3Client s3Client;
 	
 	public String buildS3Url(String key) {
-	    String s3Url = awsConfig.getS3Client()
+	    String s3Url = s3Client
 	    		.utilities()
-	    		.getUrl(builder -> builder.bucket(awsConfig.getBucketName()).key(key))
+	    		.getUrl(builder -> builder.bucket(awsProperties.getBucket()).key(key))
 	    		.toExternalForm();
 	    return s3Url;
 	}
 	
 	public void putObject(String key, MultipartFile file) {
 		try {
-		    awsConfig.getS3Client()
+		    s3Client
 		    		.putObject(PutObjectRequest.builder()
-			        .bucket(awsConfig.getBucketName())
+			        .bucket(awsProperties.getBucket())
 			        .key(key)
 			        .contentType(file.getContentType())
 			        .build(),
@@ -54,17 +56,17 @@ public class AwsFunctions {
 	}
 	
 	public ResponseInputStream<GetObjectResponse> objectAsBytes(Attachment image) {
-		return awsConfig.getS3Client()
+		return s3Client
 				.getObject(GetObjectRequest.builder()
-						.bucket(awsConfig.getBucketName())
+						.bucket(awsProperties.getBucket())
 						.key(image.getObjectKey())
 						.build());
 	}
 	
 	public void deleteObject(Attachment image) {
-        awsConfig.getS3Client()
+        s3Client
 			.deleteObject(DeleteObjectRequest.builder()
-			.bucket(awsConfig.getBucketName())
+			.bucket(awsProperties.getBucket())
 			.key(image.getObjectKey())
 			.build());
 	}
@@ -75,15 +77,15 @@ public class AwsFunctions {
 	    
 	    String newKey = newName + extension;
 	    
-	    awsConfig.getS3Client().copyObject(builder -> builder
-	            .sourceBucket(awsConfig.getBucketName())
+	    s3Client.copyObject(builder -> builder
+	            .sourceBucket(awsProperties.getBucket())
 	            .sourceKey(image.getObjectKey())
-	            .destinationBucket(awsConfig.getBucketName())
+	            .destinationBucket(awsProperties.getBucket())
 	            .destinationKey(newKey)
         );
 	    
-	    awsConfig.getS3Client().deleteObject(builder -> builder
-	            .bucket(awsConfig.getBucketName())
+	    s3Client.deleteObject(builder -> builder
+	            .bucket(awsProperties.getBucket())
 	            .key(image.getObjectKey())
         );
 	    

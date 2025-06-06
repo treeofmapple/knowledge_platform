@@ -13,18 +13,3 @@ management:
       show-details: always
     metrics:
       access: read-only 
-    prometheus:
-      access: unrestricted 
-
-  tracing:
-    enabled: true
-    sampling:
-      probability: 1.0
-
-  prometheus:
-    metrics:
-      export:
-        enabled: true
-
-tracing:
-  url: ${JAEGER_URL}

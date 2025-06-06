@@ -20,5 +20,4 @@ spring:
   jpa:
     open-in-view: false 
     hibernate:
-      ddl-auto: ${DDL_AUTO:update} #create #create-drop # validate #none #update
-    show-sql: false # show the updates on the sql on the console
+      ddl-auto: ${DDL_AUTO:update}

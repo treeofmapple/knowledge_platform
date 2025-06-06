@@ -1,11 +1,8 @@
 spring:
   profiles:
-    active: actuator, console, database, service #loki-enabled
+    active: actuator, console, database, service
   application:
       name: knowledge
 
-tracing:
-  enabled: false
-
 server:
-  port: ${SERVER_PORT:8000} # set to 8443 to secure
+  port: ${SERVER_PORT:8000}

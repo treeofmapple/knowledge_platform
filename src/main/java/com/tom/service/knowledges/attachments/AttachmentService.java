@@ -22,24 +22,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AttachmentService {
 	
-	// check if something exists on the database then don't allow it to upload it...
-	
 	private final AwsFunctions functions;
 	private final AttachmentRepository repository;
 	private final AttachmentMapper mapper;
 	private final SystemUtils utils;
 	private final AttachmentUtils repoCall;
-	private final int PAGE_SIZE = 20; 
 	
-	// Upgrade based on the image repository
-
-	public AttachmentPageResponse findAll(int page){
-		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
-		Page<Attachment> imagePage = repository.findAll(pageable);
-		return mapper.fromPageResponse(repoCall.findObjectListPaged(imagePage), imagePage.getTotalPages(), imagePage.getSize(), imagePage.getTotalPages());
-	} // fix this 
-	
-	public AttachmentResponse findObjectByName(String name) {
+	public AttachmentResponse findObjectByName(String name) { // find all files on an object
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is searching for object by name: {}", userIp, name);
 		var image = repoCall.findObject(name);

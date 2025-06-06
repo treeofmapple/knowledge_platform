@@ -6,7 +6,6 @@ import com.tom.service.knowledges.exception.NotFoundException;
 import com.tom.service.knowledges.security.AuthenticationMapper;
 import com.tom.service.knowledges.security.TokenRepository;
 import com.tom.service.knowledges.security.TokenType;
-import com.tom.service.knowledges.security.UpdateRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +24,7 @@ public class UserUtils {
 	}
 	
 	public void saveUserToken(User user, String jwtToken) {
-		var token = mapper.buildAttributes(user, jwtToken, TokenType.BEARER, false, false);
+		var token = mapper.buildToken(user, jwtToken, TokenType.BEARER, false, false);
 		tokenRepository.save(token);
 	}
 

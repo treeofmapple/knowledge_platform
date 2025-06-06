@@ -1,9 +1,5 @@
 package com.tom.service.knowledges.attachments;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.tom.service.knowledges.common.ServiceLogger;
@@ -17,18 +13,9 @@ import lombok.RequiredArgsConstructor;
 public class AttachmentUtils {
 
 	private final AttachmentRepository repository;
-	private final AttachmentMapper mapper;
-	
-	public List<AttachmentResponse> findObjectListPaged(Page<Attachment> imagePage) {
-		List<AttachmentResponse> content = imagePage
-				.stream()
-				.map(mapper::fromResponse)
-				.collect(Collectors.toList());
-		return content;
-	}
 	
 	public Attachment findObject(String name) {
-		return repository.findByNameIgnoreCase(name).orElseThrow(() -> {
+		return repository.findByName(name).orElseThrow(() -> {
             String message = String.format("Image with name %s not found", name);
             ServiceLogger.error(message);
             return new NotFoundException(message);
