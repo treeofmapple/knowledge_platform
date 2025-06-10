@@ -29,15 +29,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@ToString(exclude = {"image", "attachments", "tags", "user"})
+@EqualsAndHashCode(callSuper = true, exclude = {"image", "attachments", "tags", "user"})
 @Table(name = "notes", indexes = {
-		@Index(name = "idx_note_name", columnList = "note_name"),
-		@Index(name = "idx_note_annotation", columnList = "annotation")
+		@Index(name = "idx_note_name", columnList = "note_name")
 })
 public class Note extends Auditable {
 
@@ -61,16 +62,16 @@ public class Note extends Auditable {
 	@Column(name = "annotation", 
 			nullable = true, 
 			unique = false)
-	// put all the text onto a byte file to be armazenated easily
+	// put all the text onto a byte file to be store it easily
 	private byte[] annotation;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "image_id")
+	@JoinColumn(name = "image_id", nullable = true)
 	// Must provide an image to be set to be show what project it is or no
 	private Image image;
 
 	@OneToMany(
-			mappedBy = "notes",
+			mappedBy = "note",
 			cascade = CascadeType.ALL,
 			orphanRemoval = true,
 			fetch = FetchType.LAZY
@@ -84,7 +85,6 @@ public class Note extends Auditable {
 	@JoinTable(name = "notes_tags", 
 			joinColumns = {@JoinColumn(name = "notes_id")},
 			inverseJoinColumns = {@JoinColumn(name = "tags_id")})
-	
 	// can be null no tag
 	private Set<Tag> tags = new HashSet<>();
 	

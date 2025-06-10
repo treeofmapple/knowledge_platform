@@ -2,20 +2,9 @@ application:
   security:
     secret-key: ${SECRET_KEY}
     expiration: ${EXPIRATION_TIME:1H}
-  refresh-token: 
-    expiration: ${REFRESH_TIME:7D}
+    refresh-token: 
+      expiration: ${REFRESH_TIME:7D}
   page:
     size: ${PAGE_SIZE:10}
-
-cloud:
-  aws:
-    bucket: ${AWS_BUCKET}
-    region: ${AWS_REGION}
-
-aws:
-  r2: 
-    endpoint: ${CLOUDFLARE_ENDPOINT:NONE}
-    access-key-id: ${ACCESS_KEY:NONE}
-    secret-access-key: ${SECRET_KEY:NONE}
-    bucket-name: ${BUCKET_NAME:NONE}
-    region: auto
+  cors:
+    allowed-origins: "*"

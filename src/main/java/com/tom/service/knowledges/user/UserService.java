@@ -57,7 +57,7 @@ public class UserService {
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 		ServiceLogger.info("IP {}, user {}, is searching for: {}", operations.getUserIp(), user.getUsername(), userInfo);
 
-		var users = repository.findByUsernameContainingIgnoreCaseOrEmailContainingIgnoreCase(userInfo);
+		var users = repository.findByUsernameOrEmailContainingIgnoreCase(userInfo);
 		if (users.isEmpty()) {
 			throw new NotFoundException("No users found matching: " + userInfo);
 		}
@@ -130,9 +130,9 @@ public class UserService {
 	public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
 		String userIdentifier = request.userinfo();
 
-		var user = repository.findByUsernameOrEmail(userIdentifier)
+		var user = repository.findByUsername(userIdentifier).or(() -> repository.findByEmail(userIdentifier))
 				.orElseThrow(() -> new NotFoundException("Username or email wasn't found"));
-	    
+
 		authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), request.password()));
 
 		var jwtToken = jwtService.generateToken(user);
@@ -155,7 +155,7 @@ public class UserService {
 		refreshToken = authHeader.substring(7);
 		userInfo = jwtService.extractUsername(refreshToken);
 		if (userInfo != null) {
-			var user = repository.findByUsernameOrEmail(userInfo)
+			var user = repository.findByUsername(userInfo).or(() -> repository.findByEmail(userInfo))
 					.orElseThrow(() -> new NotFoundException("User username or email not found"));
 			if (jwtService.isTokenValid(refreshToken, user)) {
 				var accessToken = jwtService.generateToken(user);

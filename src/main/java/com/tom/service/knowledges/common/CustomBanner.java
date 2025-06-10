@@ -13,7 +13,11 @@ import org.springframework.core.io.ClassPathResource;
 
 public class CustomBanner implements Banner {
 
-	private SystemUtils utils;
+	private final SystemUtils utils;
+
+	public CustomBanner() {
+			this.utils = new SystemUtils();
+	}
 	
 	@Override
 	public void printBanner(Environment environment, Class<?> sourceClass, PrintStream out) {

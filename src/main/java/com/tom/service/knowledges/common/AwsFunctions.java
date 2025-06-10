@@ -55,12 +55,22 @@ public class AwsFunctions {
 	    }
 	}
 	
-	public ResponseInputStream<GetObjectResponse> objectAsBytes(Attachment image) {
-		return s3Client
-				.getObject(GetObjectRequest.builder()
-						.bucket(awsProperties.getBucket())
-						.key(image.getObjectKey())
-						.build());
+	public byte[] objectAsBytes(Attachment image) {
+	    ResponseInputStream<GetObjectResponse> s3ObjectStream = s3Client
+	            .getObject(GetObjectRequest.builder()
+	                    .bucket(awsProperties.getBucket())
+	                    .key(image.getObjectKey())
+	                    .build());
+
+	    try (s3ObjectStream) { 
+	        return s3ObjectStream.readAllBytes();
+	    } catch (IOException e) {
+	        ServiceLogger.error("Error reading bytes from S3 object with key: " + image.getObjectKey(), e);
+	        throw new DataTransferenceException("Error reading file from storage", e);
+	    } catch (S3Exception | SdkClientException e) {
+	        ServiceLogger.error("Error downloading file from S3 with key: " + image.getObjectKey(), e);
+	        throw new DataTransferenceException("Error during S3 file transfer", e);
+	    }
 	}
 	
 	public void deleteObject(Attachment image) {

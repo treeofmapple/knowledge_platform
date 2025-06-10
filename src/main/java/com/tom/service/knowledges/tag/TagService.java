@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TagService {
 
-	@Value("{application.page.size}:10")
+	@Value("${application.page.size:10}")
 	private int PAGE_SIZE;
 	
 	private final TagRepository repository;

@@ -26,12 +26,12 @@ public class ApplicationConfig {
 
 	@Bean
 	UserDetailsService userDetailsService() {
-	    return username -> repository.findByUsernameOrEmail(username)
+	    return username -> repository.findByUsername(username)
+		        .or(() -> repository.findByEmail(username))
 	        .orElseThrow(() -> new NotFoundException("User not found"));
 	}
 	
 	@Bean
-	@SuppressWarnings("deprecation")
 	AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userDetailsService());

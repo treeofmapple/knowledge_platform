@@ -1,1 +1,1 @@
-org.springframework.boot.SpringApplicationRunListener=com.tom.service.knowledge.config.BannerConfig
+org.springframework.boot.SpringApplicationRunListener=com.tom.service.knowledges.config.BannerConfig

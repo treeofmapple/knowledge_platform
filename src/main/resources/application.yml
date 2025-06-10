@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: actuator, console, database, service
+    active: actuator, console, database, service, cloud
   application:
       name: knowledge
 

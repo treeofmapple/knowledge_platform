@@ -1,0 +1,12 @@
+cloud:
+  aws:
+    bucket: ${AWS_BUCKET}
+    region: ${AWS_REGION}
+
+aws:
+  r2: 
+    endpoint: ${CLOUDFLARE_ENDPOINT:NONE}
+    access-key-id: ${CLOUDFLARE_ACCESS_KEY:NONE}
+    secret-access-key: ${CLOUDFLARE_SECRET_KEY:NONE}
+    bucket: ${CLOUDFLARE_BUCKET_NAME:NONE}
+    region: auto

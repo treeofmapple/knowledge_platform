@@ -1,13 +1,7 @@
 package com.tom.service.knowledges.attachments;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,12 +22,12 @@ public class AttachmentService {
 	private final SystemUtils utils;
 	private final AttachmentUtils repoCall;
 	
-	public AttachmentResponse findObjectByName(String name) { // find all files on an object
+	public AttachmentResponse findObjectByName(String name) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is searching for object by name: {}", userIp, name);
 		var image = repoCall.findObject(name);
 		return mapper.fromResponse(image);
-	} // fix this
+	}
 	
 	@Transactional
 	public AttachmentResponse uploadObject(MultipartFile file) {
