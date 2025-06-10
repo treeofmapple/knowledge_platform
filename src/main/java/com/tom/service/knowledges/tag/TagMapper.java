@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
@@ -30,4 +31,7 @@ public interface TagMapper {
         		page.getTotalElements());
     }
 	
+    @Mapping(target = "name", source = "name")
+    void mergeFromName(@MappingTarget Tag tags, String name);
+    
 }

@@ -5,7 +5,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,12 +31,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
-	@Value("${application.security.expiration}")
-	private String jwtExpiration;
-
-	@Value("${application.security.refresh-token.expiration}")
-	private String refreshExpiration;
 
 	private final AuthenticationManager authManager;
 	private final PasswordEncoder passwordEncoder;
@@ -71,7 +64,7 @@ public class UserService {
 		if (!request.password().equals(request.confirmPassword())) {
 			throw new IllegalStatusException("Wrong Password");
 		}
-		var data = utils.mergeData(user, request);
+		var data = mapper.mergeUser(user, request);
 		repository.save(data);
 		ServiceLogger.info("IP {}, user {} changed their password", operations.getUserIp(), user.getUsername());
 	}

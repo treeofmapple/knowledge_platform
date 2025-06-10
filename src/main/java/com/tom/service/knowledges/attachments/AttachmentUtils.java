@@ -1,6 +1,6 @@
 package com.tom.service.knowledges.attachments;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.tom.service.knowledges.common.ServiceLogger;
 import com.tom.service.knowledges.exception.ConflictException;
@@ -8,13 +8,13 @@ import com.tom.service.knowledges.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class AttachmentUtils {
 
 	private final AttachmentRepository repository;
 	
-	public Attachment findObject(String name) {
+	public Attachment ensureObjectExistAndGet(String name) {
 		return repository.findByName(name).orElseThrow(() -> {
             String message = String.format("Image with name %s not found", name);
             ServiceLogger.error(message);
@@ -22,7 +22,7 @@ public class AttachmentUtils {
 		});
 	}
 	
-	public void ensureObjectExist(String name) {
+	public void checkIfObjectAlreadyExists(String name) {
 		if (repository.existsByName(name)) {
 			String message = "Object already exists: " + name;
 			ServiceLogger.warn(message);
@@ -30,24 +30,11 @@ public class AttachmentUtils {
 		}
 	}
 
-	public void ensureObjectNotExist(String name) {
-		if (!repository.existsByName(name)) {
-			String message = "Object with name " + name + " not exists.";
-			ServiceLogger.warn(message);
-			throw new ConflictException(message);
-		}
-	}
-	
-	public void mergeData(Attachment images, String name, String key, String url, String contentType, long size) {
-		images.setName(name);
-		images.setObjectKey(key);
-		images.setObjectUrl(url);
-		images.setSize(size);
-		images.setContentType(contentType);
-	}	
-	
-	public void mergeData(Attachment images, String key, String url) {
-		images.setObjectKey(key);
-		images.setObjectUrl(url);
-	}
+    public void checkIfAttachmentIsSame(Attachment currentName, String newName) {
+    	repository.findByName(newName).ifPresent(existent -> {
+			if(!existent.getId().equals(currentName.getId())) {
+                throw new ConflictException("Attachment name '" + newName + "' is already in use.");
+            }
+    	});
+    }
 }

@@ -46,4 +46,11 @@ public class ServiceLogger {
         log.debug("[{}] -> " + message, getCallerClassName(), args);
     }
 	
+    public static void trace(String message) {
+    	log.trace("[{}] -> {}", getCallerClassName(), message);
+    }
+	
+	public static void trace(String message, Object... args) {
+		log.trace("[{}] -> " + message, getCallerClassName(), args);
+	}
 }

@@ -36,7 +36,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true, exclude = "notes")
 @Table(name = "users", indexes = {
 		@Index(name = "idx_user_name", columnList = "username"),
 		@Index(name = "idx_user_email", columnList = "email")

@@ -21,16 +21,8 @@ public class TagUtils {
             return new NotFoundException(message);
         });
     }
-    
-    public void checkIfBothExist(String first, Tag second) {
-        repository.findByNameIgnoreCase(first).ifPresent(existingTag -> {
-            if (!existingTag.getId().equals(second.getId())) {
-                throw new RuntimeException("Tag name '" + first + "' already exists.");
-            }
-        });
-    }
 	
-	public void ensureTagCanBeCreated(String name) {
+	public void checkIfTagAlreadyExists(String name) {
 		if(repository.existsByNameIgnoreCase(name)) {
 			String message = "Tag already exists: " + name;
 			ServiceLogger.warn(message);
@@ -38,16 +30,14 @@ public class TagUtils {
 		}
 	}
 	
-	public void ensureTagDoesNotExist(String name) {
-		if(!repository.existsByNameIgnoreCase(name)) {
-			String message = "Tag with name: " + name + "not exists.";
-			ServiceLogger.warn(message);
-			throw new ConflictException(message);
-		}
+	public void checkIfTagIsSame(Tag currentName, String newName) {
+		repository.findByNameIgnoreCase(newName).ifPresent(existent -> {
+			if(!existent.getId().equals(currentName.getId())) {
+                throw new ConflictException("Tag name '" + newName + "' is already in use.");
+            }
+		});
+		
 	}
 	
-	public void mergeData(Tag tags, String name) {
-		tags.setName(name);
-	}
-
+	
 }

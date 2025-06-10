@@ -16,13 +16,6 @@ public class UserUtils {
 	private final TokenRepository tokenRepository;
 	private final AuthenticationMapper mapper;
 	
-	public User mergeData(User user, UpdateRequest request) {
-		user.setUsername(request.username());
-		user.setEmail(request.email());
-		user.setAge(request.age());
-		return user;
-	}
-	
 	public void saveUserToken(User user, String jwtToken) {
 		var token = mapper.buildToken(user, jwtToken, TokenType.BEARER, false, false);
 		tokenRepository.save(token);

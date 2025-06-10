@@ -22,7 +22,7 @@ public class TagService {
 	private final TagRepository repository;
 	private final TagMapper mapper;
 	private final SystemUtils utils;
-	private final TagUtils tagUtils;
+	private final TagUtils repoCall;
 	
 	public TagPageResponse findAll(int page) {
 		String userIp = utils.getUserIp();
@@ -46,7 +46,7 @@ public class TagService {
 		ServiceLogger.info("IP {} is creating an tag with name: {}", userIp, name);
 		
 		String trimName = name.trim();
-		tagUtils.ensureTagCanBeCreated(trimName);
+		repoCall.checkIfTagAlreadyExists(trimName);
 		
 		var newTag = mapper.build(trimName.toLowerCase());
 		var savedTag = repository.save(newTag);
@@ -61,10 +61,10 @@ public class TagService {
 		ServiceLogger.info("IP {} is renaming an tag with name: {}", userIp, currentName);
 
 		String trimmedNewName = newName.trim();
-        var tagToUpdate = tagUtils.ensureTagExistsAndGet(currentName);		
+        var tagToUpdate = repoCall.ensureTagExistsAndGet(currentName);		
 
-        tagUtils.checkIfBothExist(trimmedNewName, tagToUpdate);
-		tagUtils.mergeData(tagToUpdate, trimmedNewName);
+        repoCall.checkIfTagIsSame(tagToUpdate, trimmedNewName);
+		mapper.mergeFromName(tagToUpdate, trimmedNewName);
 
 		var updatedTag = repository.save(tagToUpdate);
         ServiceLogger.info("Tag renamed successfully {} to {}", currentName, trimmedNewName);
@@ -76,7 +76,7 @@ public class TagService {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is deleting an tag with name: {} ", userIp, name);
 		
-		var toRemove = tagUtils.ensureTagExistsAndGet(name.trim().toLowerCase());
+		var toRemove = repoCall.ensureTagExistsAndGet(name.trim().toLowerCase());
 		repository.delete(toRemove);
 		
 		ServiceLogger.info("Tag {}, was deleted", name);

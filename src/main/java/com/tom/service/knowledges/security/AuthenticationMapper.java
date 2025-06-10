@@ -2,11 +2,13 @@ package com.tom.service.knowledges.security;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import com.tom.service.knowledges.user.RegisterRequest;
+import com.tom.service.knowledges.user.UpdateRequest;
 import com.tom.service.knowledges.user.User;
 import com.tom.service.knowledges.user.UserResponse;
 
@@ -29,4 +31,5 @@ public interface AuthenticationMapper {
 	@Mapping(source = "refreshToken", target = "refreshToken")
 	AuthenticationResponse toAuthenticationResponse(String jwtToken, String refreshToken);
 	
+	User mergeUser(@MappingTarget User users, UpdateRequest request);
 }
