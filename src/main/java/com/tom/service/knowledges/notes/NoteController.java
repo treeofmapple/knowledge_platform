@@ -1,5 +1,7 @@
 package com.tom.service.knowledges.notes;
 
+import java.security.Principal;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tom.service.knowledges.tag.AttachTagRequest;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -23,44 +27,63 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NoteController {
 
-	private final NoteService noteService;
+	private final NoteService service;
 
 	@GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<NotePageResponse> findAllNotes(@RequestParam(defaultValue = "0") int value) {
-		var response = noteService.findAllNotes(value);
+		var response = service.findAllNotes(value);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
 	}
 	
 	@GetMapping(value = "/search/name", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<NotePageResponse> findNoteByName(@RequestParam String name, @RequestParam(defaultValue = "0") int value) {
-		var response = noteService.findNoteByName(name, value);
+		var response = service.findNoteByName(name, value);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
 	}
 
-	@GetMapping(value = "/tag", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/search/tag", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<NotePageResponse> findNoteByTag(@RequestParam("name") String noteName, @RequestParam(defaultValue = "0") int value) {
-		var response = noteService.findNoteByTag(noteName, value);
+		var response = service.findNoteByTag(noteName, value);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+	}
+	
+	@PostMapping(value = "/attach/note", 			
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<NoteResponse> attachTagToNote(@RequestBody @Valid AttachTagRequest request, Principal connectedUser) {
+		var response = service.attachTagToNote(request, connectedUser);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
+	
+	@DeleteMapping(value = "/attach/remove", 			
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<NoteResponse> removeTagfromNote(@RequestBody @Valid AttachTagRequest request, Principal connectedUser) {
+		var response = service.removeTagFromNote(request, connectedUser);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	@PostMapping(value = "/create", 
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<NoteResponse> createNote(@RequestBody @Valid CreateNoteRequest request) {
-		var response = noteService.createNote(request);
+	public ResponseEntity<NoteResponse> createNote(@RequestBody @Valid CreateNoteRequest request, Principal connectedUser) {
+		var response = service.createNote(request, connectedUser);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	@PutMapping(value = "/edit/{noteName}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<NoteResponse> editNote(@PathVariable String noteName, @RequestBody @Valid EditNoteRequest request) {
-		var response = noteService.editNote(request);
+	public ResponseEntity<NoteResponse> editNote(@PathVariable String noteName, @RequestBody @Valid EditNoteRequest request, Principal connectedUser) {
+		var response = service.editNote(noteName, request, connectedUser);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<Void> deleteNote(@RequestParam String name) {
-		noteService.deleteNote(name);
+	public ResponseEntity<Void> deleteNote(@RequestParam String name, Principal connectedUser) {
+		service.deleteNote(name, connectedUser);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
 }
+
+
+

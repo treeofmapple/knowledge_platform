@@ -65,8 +65,8 @@ public class Note extends Auditable {
 	// put all the text onto a byte file to be store it easily
 	private byte[] annotation;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "image_id", nullable = true)
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "image_id", referencedColumnName = "id")
 	// Must provide an image to be set to be show what project it is or no
 	private Image image;
 

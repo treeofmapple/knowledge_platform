@@ -11,14 +11,13 @@ public record CreateNoteRequest(
 	    @NotBlank(message = "Note name cannot be blank.")
 	    String name,
 	    
-		String description,
+	    String description,
 
 	    @NotBlank(message = "Annotation cannot be blank.")
 	    @Length(max = 50000)
 	    String annotation,
-	    
+
 	    Long imageId,
-	    
 	    Set<String> tags
 
 ) {

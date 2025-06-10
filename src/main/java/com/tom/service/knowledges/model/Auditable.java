@@ -17,7 +17,7 @@ public abstract class Auditable {
 
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
-
+	
 	@PrePersist
 	protected void onCreate() {
 		this.setCreatedAt(LocalDateTime.now());

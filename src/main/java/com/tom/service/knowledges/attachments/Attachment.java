@@ -10,8 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -32,7 +30,6 @@ import lombok.NoArgsConstructor;
 	    @Index(name = "idx_attachment_content_type", 
 	    		columnList = "content_type"),
 })
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Attachment extends Auditable {
 
 	@Id
@@ -65,7 +62,7 @@ public class Attachment extends Auditable {
 	private Long size;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "note_id")
+    @JoinColumn(name = "note_id", nullable = false)
 	private Note note;
 	
 }

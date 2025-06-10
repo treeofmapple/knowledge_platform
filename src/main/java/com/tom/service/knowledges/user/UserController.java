@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -55,7 +54,7 @@ public class UserController {
 	
 	@PostMapping("/remove")
 	@PreAuthorize("hasAuthority('user:delete')")
-	public ResponseEntity <String> deleteMe(HttpServletRequest request, HttpServletResponse response, Principal connectedUser) {
+	public ResponseEntity <String> deleteMe(HttpServletRequest request, Principal connectedUser) {
 		var data = service.deleteMe(connectedUser);
 		request.getSession().invalidate();
 		return ResponseEntity.status(HttpStatus.OK).body(data);

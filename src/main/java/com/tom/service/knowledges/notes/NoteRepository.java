@@ -14,6 +14,9 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
 	
 	Page<Note> findByNameContainingIgnoreCase(String name, Pageable pageable);
 	
+	Page<Note> findByTags_NameContainingIgnoreCase(String tagName, Pageable pageable);
+	
+	
 	boolean existsByName(String name);
 	
 }

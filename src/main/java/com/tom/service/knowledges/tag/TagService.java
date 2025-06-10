@@ -1,5 +1,8 @@
 package com.tom.service.knowledges.tag;
 
+import java.security.Principal;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.tom.service.knowledges.common.ServiceLogger;
 import com.tom.service.knowledges.common.SystemUtils;
+import com.tom.service.knowledges.notes.Note;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +45,7 @@ public class TagService {
 	}
 	
 	@Transactional
-	public TagResponse createTag(String name) {
+	public TagResponse createTag(String name, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is creating an tag with name: {}", userIp, name);
 		
@@ -56,7 +60,7 @@ public class TagService {
 	}
 	
 	@Transactional
-	public TagResponse renameTagByName(String currentName, String newName) {
+	public TagResponse renameTagByName(String currentName, String newName, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is renaming an tag with name: {}", userIp, currentName);
 
@@ -72,12 +76,18 @@ public class TagService {
 	}
 	
 	@Transactional
-	public void deleteTagByName(String name) {
+	public void deleteTagByName(String name, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is deleting an tag with name: {} ", userIp, name);
 		
-		var toRemove = repoCall.ensureTagExistsAndGet(name.trim().toLowerCase());
-		repository.delete(toRemove);
+		var tagToRemove = repoCall.ensureTagExistsAndGet(name.trim().toLowerCase());
+		
+        Set<Note> notesWithTag = tagToRemove.getNotes();
+        for (Note note : notesWithTag) {
+            note.getTags().remove(tagToRemove);
+        }
+
+        repository.delete(tagToRemove);
 		
 		ServiceLogger.info("Tag {}, was deleted", name);
 	}

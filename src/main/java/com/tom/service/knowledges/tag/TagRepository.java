@@ -1,6 +1,7 @@
 package com.tom.service.knowledges.tag;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,4 +17,5 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
 	
 	boolean existsByNameIgnoreCase(String name);
 	
+    Set<Tag> findByNameIn(Set<String> names);
 }

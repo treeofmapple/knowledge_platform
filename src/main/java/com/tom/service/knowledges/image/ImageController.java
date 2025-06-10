@@ -1,5 +1,7 @@
 package com.tom.service.knowledges.image;
 
+import java.security.Principal;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +26,14 @@ public class ImageController {
 	@PostMapping(value = "/upload",
 			consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ImageResponse> uploadImageToNote(MultipartFile file) {
-		var response = service.uploadImage(file);
+	public ResponseEntity<ImageResponse> uploadImageToNote(@RequestParam("name") String noteName, @RequestParam MultipartFile file, Principal connectedUser) {
+		var response = service.uploadImageToNote(noteName, file, connectedUser);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
 	}
 	
 	@DeleteMapping(value = "/remove")
-	public ResponseEntity<Void> removeImagefromNote(@RequestParam("name") String imageName) {
-		service.removeImageFromNote(imageName);
+	public ResponseEntity<Void> removeImagefromNote(@RequestParam("name") String noteName, Principal connectedUser) {
+		service.removeImageFromNote(noteName, connectedUser);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	

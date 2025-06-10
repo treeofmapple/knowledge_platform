@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tom.service.knowledges.attachments.Attachment;
 import com.tom.service.knowledges.config.AwsProperties;
 import com.tom.service.knowledges.exception.DataTransferenceException;
 
@@ -55,48 +54,48 @@ public class AwsFunctions {
 	    }
 	}
 	
-	public byte[] objectAsBytes(Attachment image) {
+	public byte[] objectAsBytes(String key) {
 	    ResponseInputStream<GetObjectResponse> s3ObjectStream = s3Client
 	            .getObject(GetObjectRequest.builder()
 	                    .bucket(awsProperties.getBucket())
-	                    .key(image.getObjectKey())
+	                    .key(key)
 	                    .build());
 
 	    try (s3ObjectStream) { 
 	        return s3ObjectStream.readAllBytes();
 	    } catch (IOException e) {
-	        ServiceLogger.error("Error reading bytes from S3 object with key: " + image.getObjectKey(), e);
+	        ServiceLogger.error("Error reading bytes from S3 object with key: " + key, e);
 	        throw new DataTransferenceException("Error reading file from storage", e);
 	    } catch (S3Exception | SdkClientException e) {
-	        ServiceLogger.error("Error downloading file from S3 with key: " + image.getObjectKey(), e);
+	        ServiceLogger.error("Error downloading file from S3 with key: " + key, e);
 	        throw new DataTransferenceException("Error during S3 file transfer", e);
 	    }
 	}
 	
-	public void deleteObject(Attachment image) {
+	public void deleteObject(String key) {
         s3Client
 			.deleteObject(DeleteObjectRequest.builder()
 			.bucket(awsProperties.getBucket())
-			.key(image.getObjectKey())
+			.key(key)
 			.build());
 	}
 	
-	public String renameObject(Attachment image, String newName) {
-	    String originalKey = image.getObjectKey();
+	public String renameObject(String key, String newName) {
+	    String originalKey = key;
 	    String extension = originalKey.contains(".") ? originalKey.substring(originalKey.lastIndexOf(".")) : "";
 	    
 	    String newKey = newName + extension;
 	    
 	    s3Client.copyObject(builder -> builder
 	            .sourceBucket(awsProperties.getBucket())
-	            .sourceKey(image.getObjectKey())
+	            .sourceKey(key)
 	            .destinationBucket(awsProperties.getBucket())
 	            .destinationKey(newKey)
         );
 	    
 	    s3Client.deleteObject(builder -> builder
 	            .bucket(awsProperties.getBucket())
-	            .key(image.getObjectKey())
+	            .key(key)
         );
 	    
 	    return newKey;
