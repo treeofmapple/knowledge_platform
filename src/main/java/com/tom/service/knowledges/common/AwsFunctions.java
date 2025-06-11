@@ -1,6 +1,8 @@
 package com.tom.service.knowledges.common;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,8 +18,11 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.paginators.ListObjectsV2Iterable;
 
 @Component
 @RequiredArgsConstructor
@@ -101,5 +106,22 @@ public class AwsFunctions {
 	    return newKey;
 	}
 	
-	
+	public List<String> listAllObjectKeys() {
+	    List<String> keys = new ArrayList<>();
+	    try {
+	        ListObjectsV2Request request = ListObjectsV2Request.builder()
+	                .bucket(awsProperties.getBucket())
+	                .build();
+	        
+	        ListObjectsV2Iterable responses = s3Client.listObjectsV2Paginator(request);
+
+	        for (ListObjectsV2Response page : responses) {
+	            page.contents().forEach(object -> keys.add(object.key()));
+	        }
+	        ServiceLogger.info("Found {} objects in bucket '{}' for cleanup.", keys.size(), awsProperties.getBucket());
+	    } catch (S3Exception e) {
+	        ServiceLogger.error("Error listing objects in S3 bucket for cleanup.", e);
+	    }
+	    return keys;
+	}
 }

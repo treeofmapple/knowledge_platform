@@ -45,7 +45,7 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body("User password was changed");
 	}
 	
-	@PostMapping("/")
+	@GetMapping("/")
 	@PreAuthorize("hasAuthority('user:read')")
 	public ResponseEntity <List<UserResponse>> findUser(@RequestParam String user, Principal connectedUser) {
 		var data = service.findUser(user, connectedUser);

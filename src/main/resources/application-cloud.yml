@@ -10,6 +10,7 @@ aws:
     secret-access-key: ${CLOUDFLARE_SECRET_KEY:NONE}
     bucket: ${CLOUDFLARE_BUCKET_NAME:NONE}
     region: auto
+    ddlAuto: ${CLOUDFLARE_DDL_AUTO:update}
 
 spring:
   servlet:

@@ -15,5 +15,6 @@ public class AwsProperties {
 	private String secretAccessKey;
     private String bucket;
 	private String region;
+	private String ddlAuto;
 	
 }
