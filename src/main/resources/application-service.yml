@@ -7,4 +7,5 @@ application:
   page:
     size: ${PAGE_SIZE:10}
   cors:
-    allowed-origins: "*"
+    allowed-origins: ${ALLOWED_ORIGINS}
+    time: 3600

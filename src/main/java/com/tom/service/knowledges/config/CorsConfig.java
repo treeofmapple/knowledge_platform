@@ -16,15 +16,17 @@ public class CorsConfig implements WebMvcConfigurer {
     @Value("${application.cors.allowed-origins}")
     private String[] allowedOrigins;
 	
-	@Value("${application.cors.time:300}")
+	@Value("${application.cors.time:3600}")
 	private Long corsTime;
 	
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 	    CorsConfiguration config = new CorsConfiguration();
-	    config.setAllowedOrigins(Arrays.asList(allowedOrigins));
-	    config.setAllowedMethods(Arrays.asList("*"));
-	    config.setAllowedHeaders(Arrays.asList("*"));
+	    
+	    config.setAllowedOriginPatterns(Arrays.asList(allowedOrigins));
+        
+	    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
 	    config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
 	    config.setAllowCredentials(true);
 	    config.setMaxAge(corsTime);

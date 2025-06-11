@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tom.service.knowledges.common.ServiceLogger;
 import com.tom.service.knowledges.common.SystemUtils;
@@ -16,7 +18,6 @@ import com.tom.service.knowledges.tag.AttachTagRequest;
 import com.tom.service.knowledges.tag.TagUtils;
 import com.tom.service.knowledges.user.User;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -99,7 +100,7 @@ public class NoteService {
 		return mapper.toResponse(savedNote);
 	}
 
-	@Transactional
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public NoteResponse createNote(CreateNoteRequest request, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is creating note '{}'", userIp, request.name());
@@ -118,7 +119,7 @@ public class NoteService {
 		return mapper.toResponse(savedNote);
 	}
 
-	@Transactional
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public NoteResponse editNote(String noteName, EditNoteRequest request, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {}", userIp);

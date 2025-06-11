@@ -8,12 +8,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tom.service.knowledges.common.ServiceLogger;
 import com.tom.service.knowledges.common.SystemUtils;
 import com.tom.service.knowledges.notes.Note;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -44,7 +45,7 @@ public class TagService {
 		return mapper.toTagPageResponse(tagPage);
 	}
 	
-	@Transactional
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public TagResponse createTag(String name, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is creating an tag with name: {}", userIp, name);
@@ -59,7 +60,7 @@ public class TagService {
 		return mapper.toResponse(savedTag);
 	}
 	
-	@Transactional
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public TagResponse renameTagByName(String currentName, String newName, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is renaming an tag with name: {}", userIp, currentName);

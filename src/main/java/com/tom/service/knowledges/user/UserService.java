@@ -10,6 +10,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tom.service.knowledges.common.ServiceLogger;
 import com.tom.service.knowledges.common.SystemUtils;
@@ -24,7 +26,6 @@ import com.tom.service.knowledges.security.Role;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -95,7 +96,7 @@ public class UserService {
 		ServiceLogger.info("IP {}, user {} changed their password", operations.getUserIp(), user.getUsername());
 	}
 
-	@Transactional
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public AuthenticationResponse register(RegisterRequest request) {
 		if (repository.existsByUsernameOrEmail(request.username(), request.email())) {
 			throw new AlreadyExistsException("User already exists");
@@ -118,7 +119,7 @@ public class UserService {
 		return mapper.toAuthenticationResponse(jwtToken, refreshToken);
 	}
 
-	@Transactional
+	@Transactional(isolation = Isolation.SERIALIZABLE)
 	public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
 		String userIdentifier = request.userinfo();
 
