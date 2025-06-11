@@ -1,7 +1,5 @@
 package com.tom.service.knowledges.tag;
 
-import java.security.Principal;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,21 +38,21 @@ public class TagController {
 	@PostMapping(value = "/new",
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<TagResponse> createTag(@RequestBody CreateTagRequest request, Principal connectedUser) {
-		var response = service.createTag(request.name(), connectedUser);
+	public ResponseEntity<TagResponse> createTag(@RequestBody CreateTagRequest request) {
+		var response = service.createTag(request.name());
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	@PutMapping(value = "/rename",
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<TagResponse> renameTag(@RequestBody RenameTagRequest request, Principal connectedUser) {
-		var response = service.renameTagByName(request.currentName(), request.newName(), connectedUser);
+	public ResponseEntity<TagResponse> renameTag(@RequestBody RenameTagRequest request) {
+		var response = service.renameTagByName(request.currentName(), request.newName());
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
 	}
 	
 	@DeleteMapping(value = "/delete")
-	public ResponseEntity<String> deleteTag(@RequestParam String name, Principal connectedUser) {
-		service.deleteTagByName(name, connectedUser);
+	public ResponseEntity<String> deleteTag(@RequestParam String name) {
+		service.deleteTagByName(name);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Deleted");
 	}
 	

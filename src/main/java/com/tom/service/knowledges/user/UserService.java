@@ -3,6 +3,7 @@ package com.tom.service.knowledges.user;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpHeaders;
@@ -10,7 +11,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tom.service.knowledges.common.ServiceLogger;
@@ -39,6 +39,9 @@ public class UserService {
 	private final SystemUtils operations;
 	private final UserUtils utils;
 	private final JwtService jwtService;
+	
+	private final ConcurrentHashMap<String, Object> registrationLocks = new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String, Object> authenticationLocks = new ConcurrentHashMap<>();
 	
 	public UserResponse getCurrentUser(Principal connectedUser) {
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
@@ -96,45 +99,64 @@ public class UserService {
 		ServiceLogger.info("IP {}, user {} changed their password", operations.getUserIp(), user.getUsername());
 	}
 
-	@Transactional(isolation = Isolation.SERIALIZABLE)
+	@Transactional
 	public AuthenticationResponse register(RegisterRequest request) {
-		if (repository.existsByUsernameOrEmail(request.username(), request.email())) {
-			throw new AlreadyExistsException("User already exists");
+		String normalizedUsername = request.username().toLowerCase().trim();
+		Object lock = registrationLocks.computeIfAbsent(normalizedUsername, k -> new Object());
+
+		synchronized (lock) {
+			try {
+				if (repository.existsByUsernameOrEmail(request.username(), request.email())) {
+					throw new AlreadyExistsException("User already exists");
+				}
+
+			    if (!request.password().equals(request.confirmpassword())) {
+			        throw new IllegalStatusException("Passwords do not match");
+			    }
+
+				var user = mapper.toUser(request);
+				user.setPassword(passwordEncoder.encode(request.password()));
+				user.setRole(Role.USER);
+				var savedUser = repository.save(user);
+				
+				var jwtToken = jwtService.generateToken(savedUser);
+				var refreshToken = jwtService.generateRefreshToken(savedUser);
+				utils.saveUserToken(savedUser, refreshToken);
+
+				ServiceLogger.info("IP {}, user registered: {}", operations.getUserIp(), request.username());
+				return mapper.toAuthenticationResponse(jwtToken, refreshToken);
+			} finally {
+				registrationLocks.remove(normalizedUsername);
+			}
 		}
-
-	    if (!request.password().equals(request.confirmpassword())) {
-	        throw new IllegalStatusException("Passwords do not match");
-	    }
-
-		var user = mapper.toUser(request);
-		user.setPassword(passwordEncoder.encode(request.password()));
-		user.setRole(Role.USER);
-		var savedUser = repository.save(user);
-		
-		var jwtToken = jwtService.generateToken(savedUser);
-		var refreshToken = jwtService.generateRefreshToken(savedUser);
-		utils.saveUserToken(savedUser, refreshToken);
-
-		ServiceLogger.info("IP {}, user registered: {}", operations.getUserIp(), request.username());
-		return mapper.toAuthenticationResponse(jwtToken, refreshToken);
 	}
 
-	@Transactional(isolation = Isolation.SERIALIZABLE)
+	@Transactional
 	public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
-		String userIdentifier = request.userinfo();
-
-		var user = repository.findByUsername(userIdentifier).or(() -> repository.findByEmail(userIdentifier))
-				.orElseThrow(() -> new NotFoundException("Username or email wasn't found"));
-
-		authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), request.password()));
-
-		var jwtToken = jwtService.generateToken(user);
-		var refreshToken = jwtService.generateRefreshToken(user);
-		utils.revokeAllUserTokens(user);
-		utils.saveUserToken(user, refreshToken);
+		String userIdentifiers = request.userinfo().toLowerCase().trim();
+		Object lock = authenticationLocks.computeIfAbsent(userIdentifiers, k -> new Object());
 		
-		ServiceLogger.info("IP {}, user authenticated: {}", operations.getUserIp(), userIdentifier);
-		return mapper.toAuthenticationResponse(jwtToken, refreshToken);
+		synchronized(lock) {
+			try {
+				String userIdentifier = request.userinfo();
+
+				var user = repository.findByUsername(userIdentifier).or(() -> repository.findByEmail(userIdentifier))
+						.orElseThrow(() -> new NotFoundException("Username or email wasn't found"));
+
+				authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), request.password()));
+
+				var jwtToken = jwtService.generateToken(user);
+				var refreshToken = jwtService.generateRefreshToken(user);
+				utils.revokeAllUserTokens(user);
+				utils.saveUserToken(user, refreshToken);
+				
+				ServiceLogger.info("IP {}, user authenticated: {}", operations.getUserIp(), userIdentifier);
+				return mapper.toAuthenticationResponse(jwtToken, refreshToken);
+				
+			} finally {
+				authenticationLocks.remove(userIdentifiers);
+			}
+		}
 	}
 
 	@Transactional

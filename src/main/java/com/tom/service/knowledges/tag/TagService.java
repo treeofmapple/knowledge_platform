@@ -1,14 +1,13 @@
 package com.tom.service.knowledges.tag;
 
-import java.security.Principal;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tom.service.knowledges.common.ServiceLogger;
@@ -29,6 +28,8 @@ public class TagService {
 	private final SystemUtils utils;
 	private final TagUtils repoCall;
 	
+	private final ConcurrentHashMap<String, Object> tagCreationLocks = new ConcurrentHashMap<>();
+	
 	public TagPageResponse findAll(int page) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is fetching all tags", userIp);
@@ -45,23 +46,29 @@ public class TagService {
 		return mapper.toTagPageResponse(tagPage);
 	}
 	
-	@Transactional(isolation = Isolation.SERIALIZABLE)
-	public TagResponse createTag(String name, Principal connectedUser) {
+	@Transactional
+	public TagResponse createTag(String name) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is creating an tag with name: {}", userIp, name);
 		
-		String trimName = name.trim();
-		repoCall.checkIfTagAlreadyExists(trimName);
+		String trimName = name.trim().toLowerCase();
+		Object lock = tagCreationLocks.computeIfAbsent(trimName, k -> new Object());
 		
-		var newTag = mapper.build(trimName.toLowerCase());
-		var savedTag = repository.save(newTag);
-		
-		ServiceLogger.info("Tag created successfully with ID: {} ", savedTag.getId());
-		return mapper.toResponse(savedTag);
+		synchronized(lock) {
+			try {
+				repoCall.checkIfTagAlreadyExists(trimName);
+				var newTag = mapper.build(trimName);
+				var savedTag = repository.save(newTag);
+				ServiceLogger.info("Tag created successfully with ID: {} ", savedTag.getId());
+				return mapper.toResponse(savedTag);
+			} finally {
+				tagCreationLocks.remove(trimName);
+			}
+		}
 	}
 	
-	@Transactional(isolation = Isolation.SERIALIZABLE)
-	public TagResponse renameTagByName(String currentName, String newName, Principal connectedUser) {
+	@Transactional
+	public TagResponse renameTagByName(String currentName, String newName) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is renaming an tag with name: {}", userIp, currentName);
 
@@ -77,7 +84,7 @@ public class TagService {
 	}
 	
 	@Transactional
-	public void deleteTagByName(String name, Principal connectedUser) {
+	public void deleteTagByName(String name) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is deleting an tag with name: {} ", userIp, name);
 		
@@ -87,7 +94,6 @@ public class TagService {
         for (Note note : notesWithTag) {
             note.getTags().remove(tagToRemove);
         }
-
         repository.delete(tagToRemove);
 		
 		ServiceLogger.info("Tag {}, was deleted", name);

@@ -2,6 +2,7 @@ package com.tom.service.knowledges.notes;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -9,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tom.service.knowledges.common.ServiceLogger;
@@ -33,6 +33,8 @@ public class NoteService {
 	private final NoteUtils noteUtils;
 	private final TagUtils tagUtils;
 
+	private final ConcurrentHashMap<String, Object> noteCreationLocks = new ConcurrentHashMap<>();
+	
 	public NotePageResponse findAllNotes(int value) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {}", userIp);
@@ -100,26 +102,37 @@ public class NoteService {
 		return mapper.toResponse(savedNote);
 	}
 
-	@Transactional(isolation = Isolation.SERIALIZABLE)
+	@Transactional
 	public NoteResponse createNote(CreateNoteRequest request, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is creating note '{}'", userIp, request.name());
 
-		noteUtils.checkIfNoteAlreadyExists(request.name());
-		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-		
-		var newNote = mapper.build(request);
-		newNote.setUser(user);
-		
-		byte[] annotationBytes = request.annotation().getBytes(StandardCharsets.UTF_8);
-		newNote.setAnnotation(annotationBytes);
-		var savedNote = repository.save(newNote);
+		String normalizedNoteName = request.name().trim().toLowerCase();
+		Object lock = noteCreationLocks.computeIfAbsent(normalizedNoteName, k -> new Object());
+		synchronized(lock) {
+			try {
+				noteUtils.checkIfNoteAlreadyExists(request.name());
+				
+				var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+				
+				var newNote = mapper.build(request);
+				newNote.setUser(user);
+				
+				byte[] annotationBytes = request.annotation().getBytes(StandardCharsets.UTF_8);
+				newNote.setAnnotation(annotationBytes);
+				var savedNote = repository.save(newNote);
 
-		ServiceLogger.info("Note '{}' created successfully by user {}", savedNote.getName(), user.getUsername());
-		return mapper.toResponse(savedNote);
+				ServiceLogger.info("Note '{}' created successfully by user {}", savedNote.getName(), user.getUsername());
+				return mapper.toResponse(savedNote);
+				
+			} finally {
+				noteCreationLocks.remove(normalizedNoteName);
+			}
+		}
+		
 	}
 
-	@Transactional(isolation = Isolation.SERIALIZABLE)
+	@Transactional
 	public NoteResponse editNote(String noteName, EditNoteRequest request, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {}", userIp);
