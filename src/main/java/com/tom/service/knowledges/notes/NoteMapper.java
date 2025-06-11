@@ -24,7 +24,7 @@ public interface NoteMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "attachments", ignore = true)
-    @Mapping(target = "annotation", expression = "java(request.annotation().getBytes(StandardCharsets.UTF_8))")
+    @Mapping(target = "annotation", ignore = true)
     @Mapping(source = "imageId", target = "image")
     @Mapping(source = "tags", target = "tags")
 	Note build(CreateNoteRequest request);
@@ -32,7 +32,7 @@ public interface NoteMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "attachments", ignore = true)
-    @Mapping(target = "annotation", expression = "java(request.annotation() != null ? request.annotation().getBytes(StandardCharsets.UTF_8) : note.getAnnotation())")
+    @Mapping(target = "annotation", ignore = true)
     @Mapping(source = "imageId", target = "image")
     @Mapping(source = "tags", target = "tags")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

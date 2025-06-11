@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.tom.service.knowledges.attachments.Attachment;
 import com.tom.service.knowledges.image.Image;
-import com.tom.service.knowledges.tag.Tag;
+import com.tom.service.knowledges.tag.TagResponse;
 
 public record NoteResponse(
 		
@@ -14,7 +14,7 @@ public record NoteResponse(
 		String annotation,
 		Image image,
 		Set<Attachment> attachments,
-		Set<Tag> tags,
+		Set<TagResponse> tags,
 		LocalDateTime createdAt
 		
 		) {

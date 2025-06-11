@@ -38,6 +38,10 @@ public class AttachmentController {
 	public ResponseEntity<byte[]> downloadObjectFromNote(@RequestParam("name") String noteName, Principal connectedUser) {
 		var response = service.downloadObjectFromNote(noteName, connectedUser);
 		
+	    if (response == null) {
+	        return ResponseEntity.noContent().build();
+	    }
+		
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.valueOf("application/zip"));
         headers.setContentDispositionFormData("attachment", noteName + "_attachments.zip");

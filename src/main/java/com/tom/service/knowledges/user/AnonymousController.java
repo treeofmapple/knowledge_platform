@@ -36,9 +36,9 @@ public class AnonymousController {
 	}
 	
 	@PostMapping("/refresh-token")
-	public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		service.refreshToken(request, response);
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request) throws IOException {
+		var response = service.refreshToken(request);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 }

@@ -2,7 +2,6 @@ package com.tom.service.knowledges.user;
 
 import org.springframework.stereotype.Component;
 
-import com.tom.service.knowledges.exception.NotFoundException;
 import com.tom.service.knowledges.security.AuthenticationMapper;
 import com.tom.service.knowledges.security.TokenRepository;
 import com.tom.service.knowledges.security.TokenType;
@@ -24,7 +23,7 @@ public class UserUtils {
 	public void revokeAllUserTokens(User user) {
 		var validUser = tokenRepository.findAllValidTokenByUser(user.getId());
 		if (validUser.isEmpty()) {
-			throw new NotFoundException("No active tokens found for user");
+			return;
 		}
 		validUser.forEach(token -> {
 			token.setExpired(true);

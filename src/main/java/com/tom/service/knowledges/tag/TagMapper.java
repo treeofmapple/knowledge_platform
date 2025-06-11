@@ -18,7 +18,7 @@ public interface TagMapper {
 	@Mapping(target = "id", ignore = true)
 	Tag build(String name);
 	
-	TagResponse toResponse(Tag tags);
+	TagResponse toResponse(Tag tag);
 	
     List<TagResponse> toResponseList(List<Tag> tags);
     

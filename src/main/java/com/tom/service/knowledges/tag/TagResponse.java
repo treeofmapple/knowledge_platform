@@ -1,5 +1,5 @@
 package com.tom.service.knowledges.tag;
 
-public record TagResponse(String name) {
+public record TagResponse(Long id, String name) {
 
 }

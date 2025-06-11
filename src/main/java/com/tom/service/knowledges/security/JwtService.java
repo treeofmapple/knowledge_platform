@@ -3,10 +3,13 @@ package com.tom.service.knowledges.security;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +39,13 @@ public class JwtService {
 	private String refreshExpiration;
 
 	public String generateToken(UserDetails userDetails) {
-		return generateToken(new HashMap<>(), userDetails);
+		Map<String, Object> extraClaims = new HashMap<>();
+		List<String> authorities = userDetails.getAuthorities()
+				  .stream()
+				  .map(GrantedAuthority::getAuthority)
+				  .collect(Collectors.toList());
+		extraClaims.put("authorities", authorities);
+		return generateToken(extraClaims, userDetails);
 	}
 	
 	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails ) {

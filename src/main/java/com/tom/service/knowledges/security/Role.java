@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Role {
 
-	ANONYMOUS(Collections.emptySet()),
+	GUEST(Collections.emptySet()),
 	USER(Set.of(
 			USER_READ,
 			USER_UPDATE,

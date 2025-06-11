@@ -69,6 +69,10 @@ public class AttachmentService {
         if (!note.getUser().getId().equals(user.getId())) {
             throw new SecurityException("User does not have permission to access this note's attachments.");
         }
+        
+        if (note.getAttachments() == null || note.getAttachments().isEmpty()) {
+            return null;
+        }
 		
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	             ZipOutputStream zos = new ZipOutputStream(baos)) {

@@ -1,5 +1,6 @@
 package com.tom.service.knowledges.notes;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -60,6 +61,7 @@ public class NoteService {
 		return mapper.toNotePageResponse(tagNote);
 	}
 
+	@Transactional
 	public NoteResponse attachTagToNote(AttachTagRequest request, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {}", userIp);
@@ -78,6 +80,7 @@ public class NoteService {
 		return mapper.toResponse(savedNote);
 	}
 
+	@Transactional
 	public NoteResponse removeTagFromNote(AttachTagRequest request, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {}", userIp);
@@ -103,9 +106,12 @@ public class NoteService {
 
 		noteUtils.checkIfNoteAlreadyExists(request.name());
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-
+		
 		var newNote = mapper.build(request);
 		newNote.setUser(user);
+		
+		byte[] annotationBytes = request.annotation().getBytes(StandardCharsets.UTF_8);
+		newNote.setAnnotation(annotationBytes);
 		var savedNote = repository.save(newNote);
 
 		ServiceLogger.info("Note '{}' created successfully by user {}", savedNote.getName(), user.getUsername());
@@ -125,6 +131,12 @@ public class NoteService {
         }
 
 		mapper.updateNoteFromRequest(noteToUpdate, request);
+
+		if (request.annotation() != null && !request.annotation().isBlank()) {
+			byte[] newAnnotationBytes = request.annotation().getBytes(StandardCharsets.UTF_8);
+			noteToUpdate.setAnnotation(newAnnotationBytes);
+		}
+
 		var savedNote = repository.save(noteToUpdate);
 
 		ServiceLogger.info("Note '{}' updated successfully by user {}", savedNote.getName(), user.getUsername());

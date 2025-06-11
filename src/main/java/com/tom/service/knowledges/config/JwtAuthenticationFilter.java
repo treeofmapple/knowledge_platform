@@ -11,9 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.tom.service.knowledges.exception.InternalException;
 import com.tom.service.knowledges.security.JwtService;
-import com.tom.service.knowledges.security.TokenRepository;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final UserDetailsService userDetailsService;
-	private final TokenRepository tokenRepository;
 	private final JwtService jwtService;
 	
 	@Override 
@@ -47,27 +44,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 
 		final String jwt = authHeader.substring(7);
-		final String identifier = jwtService.extractUsername(jwt);
-		if (identifier == null) {
-			filterChain.doFilter(request, response);
-			return;
-		}
+        final String userIdentifier = jwtService.extractUsername(jwt);
 		
-		UserDetails userDetails = userDetailsService.loadUserByUsername(identifier);
-	    boolean isTokenValid = tokenRepository.findByToken(jwt)
-	            .map(token -> !token.isExpired() && !token.isRevoked())
-	            .orElseThrow(() -> new InternalException("Token not found or revoked."));
-		
-	    if (!jwtService.isTokenValid(jwt, userDetails) || !isTokenValid) {
-	        throw new InternalException("Invalid or expired JWT token.");
-	    }
-
-	    UsernamePasswordAuthenticationToken authToken = 
-	            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-	    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-	    
-	    SecurityContextHolder.getContext().setAuthentication(authToken);
-		filterChain.doFilter(request, response);
-	}
+        if (userIdentifier != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userIdentifier);
+            
+            if (jwtService.isTokenValid(jwt, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+        
+        filterChain.doFilter(request, response);
+    }
 	
 }

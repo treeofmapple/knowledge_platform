@@ -1,2 +1,7 @@
-/v1/**
-/actuator/**
+/v1/auth/sign-in
+/v1/auth/sign-up
+/v1/auth/refresh-token
+
+/actuator/health
+
+/error

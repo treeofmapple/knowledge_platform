@@ -11,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tom.service.knowledges.common.ServiceLogger;
 import com.tom.service.knowledges.common.SystemUtils;
 import com.tom.service.knowledges.exception.AlreadyExistsException;
@@ -81,7 +80,7 @@ public class UserService {
 	public void changePassword(PasswordRequest request, Principal connectedUser) {
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
-		if (!passwordEncoder.matches(request.confirmationpassword(), user.getPassword())) {
+		if (!passwordEncoder.matches(request.currentpassword(), user.getPassword())) {
 			ServiceLogger.warn("Wrong Password");
 			throw new IllegalStatusException("Wrong Password");
 		}
@@ -102,9 +101,9 @@ public class UserService {
 			throw new AlreadyExistsException("User already exists");
 		}
 
-		if (request.password().equals(request.confirmpassword())) {
-			throw new IllegalStatusException("Passwords are not the same");
-		}
+	    if (!request.password().equals(request.confirmpassword())) {
+	        throw new IllegalStatusException("Passwords do not match");
+	    }
 
 		var user = mapper.toUser(request);
 		user.setPassword(passwordEncoder.encode(request.password()));
@@ -113,7 +112,7 @@ public class UserService {
 		
 		var jwtToken = jwtService.generateToken(savedUser);
 		var refreshToken = jwtService.generateRefreshToken(savedUser);
-		utils.saveUserToken(savedUser, jwtToken);
+		utils.saveUserToken(savedUser, refreshToken);
 
 		ServiceLogger.info("IP {}, user registered: {}", operations.getUserIp(), request.username());
 		return mapper.toAuthenticationResponse(jwtToken, refreshToken);
@@ -131,43 +130,46 @@ public class UserService {
 		var jwtToken = jwtService.generateToken(user);
 		var refreshToken = jwtService.generateRefreshToken(user);
 		utils.revokeAllUserTokens(user);
-		utils.saveUserToken(user, jwtToken);
+		utils.saveUserToken(user, refreshToken);
+		
 		ServiceLogger.info("IP {}, user authenticated: {}", operations.getUserIp(), userIdentifier);
-
 		return mapper.toAuthenticationResponse(jwtToken, refreshToken);
 	}
 
 	@Transactional
-	public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public AuthenticationResponse refreshToken(HttpServletRequest request) throws IOException {
 		final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-		final String refreshToken;
+		final String oldRefreshToken;
 		final String userInfo;
+
 		if (authHeader == null || !authHeader.startsWith("Bearer ")) {
 			throw new NotFoundException("Auth token was not found");
 		}
-		refreshToken = authHeader.substring(7);
-		userInfo = jwtService.extractUsername(refreshToken);
+		oldRefreshToken = authHeader.substring(7);
+		userInfo = jwtService.extractUsername(oldRefreshToken);
+		
 		if (userInfo != null) {
 			var user = repository.findByUsername(userInfo).or(() -> repository.findByEmail(userInfo))
 					.orElseThrow(() -> new NotFoundException("User username or email not found"));
-			if (jwtService.isTokenValid(refreshToken, user)) {
-				var accessToken = jwtService.generateToken(user);
+			
+			if (jwtService.isTokenValid(oldRefreshToken, user)) {
+	            var newAccessToken = jwtService.generateToken(user);
+				var newRefreshToken = jwtService.generateRefreshToken(user);
 				utils.revokeAllUserTokens(user);
-				utils.saveUserToken(user, accessToken);
-				var authResponse = mapper.toAuthenticationResponse(accessToken, refreshToken);
-				new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
-				ServiceLogger.info("Access token refreshed for user {}", userInfo);
+				utils.saveUserToken(user, newRefreshToken);
+				return mapper.toAuthenticationResponse(newAccessToken, newRefreshToken);
 			}
 		}
+        throw new IllegalStatusException("Invalid refresh token");
 	}
-
+	
 	@Transactional
 	public String deleteMe(Principal connectedUser) {
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 		utils.revokeAllUserTokens(user);
 		repository.deleteById(user.getId());
 		ServiceLogger.info("IP {}, user {} has deleted their account", operations.getUserIp(), user.getUsername());
-		return "The user" + user.getUsername() + "was deleted";
+		return "The user " + user.getUsername() + " was deleted";
 	}
 
 }

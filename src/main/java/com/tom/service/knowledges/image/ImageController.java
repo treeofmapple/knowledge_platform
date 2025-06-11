@@ -26,7 +26,7 @@ public class ImageController {
 	@PostMapping(value = "/upload",
 			consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ImageResponse> uploadImageToNote(@RequestParam("name") String noteName, @RequestParam MultipartFile file, Principal connectedUser) {
+	public ResponseEntity<ImageResponse> uploadImageToNote(@RequestParam String noteName, @RequestParam MultipartFile file, Principal connectedUser) {
 		var response = service.uploadImageToNote(noteName, file, connectedUser);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
 	}
