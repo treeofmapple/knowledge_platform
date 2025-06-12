@@ -24,6 +24,12 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
     @Query("SELECT n FROM Note n JOIN n.tags t WHERE UPPER(t.name) LIKE UPPER(CONCAT('%', :tagName, '%')) AND (n.notePrivated = FALSE OR (n.notePrivated = TRUE AND n.user.id = :userId))")
     Page<Note> findByTags_NameContainingIgnoreCaseAndAccessible(@Param("tagName") String tagName, @Param("userId") UUID userId, Pageable pageable);
 
+	Page<Note> findByNotePrivatedIsTrue(Pageable pageable);
+	
+	Page<Note> findByNameContainingIgnoreCaseAndNotePrivatedIsTrue(String name, Pageable pageable);
+	
+	Page<Note> findByTags_NameContainingIgnoreCaseAndNotePrivatedIsTrue(String tagName, Pageable pageable);
+    
 	boolean existsByName(String name);
 	
 }

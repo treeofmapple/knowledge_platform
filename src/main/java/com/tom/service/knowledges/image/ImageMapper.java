@@ -14,7 +14,6 @@ public interface ImageMapper {
 
 	ImageMapper INSTANCE = Mappers.getMapper(ImageMapper.class);
 	
-	@Mapping(source = "updatedAt", target = "updatedAt")
 	ImageResponse toResponse(Image image);
 	
     @Mapping(source = "file.originalFilename", target = "name")

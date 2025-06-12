@@ -23,36 +23,54 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/v1/notes")
-@PreAuthorize("hasRole('USER')")
 @RequiredArgsConstructor
 public class NoteController {
 
 	private final NoteService service;
 
+	@PreAuthorize("hasRole('USER')")
 	@GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<NotePageResponse> findAllNotes(@RequestParam(defaultValue = "0") int value, Principal connectedUser) {
 		var response = service.findAllNotes(value, connectedUser);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
+	@PreAuthorize("hasRole('USER')")
 	@GetMapping(value = "/search/name", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<NotePageResponse> findNoteByName(@RequestParam String name, @RequestParam(defaultValue = "0") int value, Principal connectedUser) {
 		var response = service.findNoteByName(name, value, connectedUser);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
-	@GetMapping(value = "/search/tag", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<NotePageResponse> findNoteByTag(@RequestParam("name") String noteName, @RequestParam(defaultValue = "0") int value, Principal connectedUser) {
-		var response = service.findNoteByTag(noteName, value, connectedUser);
+    @PreAuthorize("permitAll()")
+    @GetMapping(value = "/search/public", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<NotePageResponse> findAllPublicNotes(@RequestParam(defaultValue = "0") int page) {
+		var response = service.findAllPublicNotes(page);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+    @PreAuthorize("permitAll()")
+	@GetMapping(value = "/search/public/name", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<NotePageResponse> findPublicNotesByName(@RequestParam String name, @RequestParam(defaultValue = "0") int page) {
+		var response = service.findPublicNotesByName(name, page);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+    @PreAuthorize("permitAll()")
+	@GetMapping(value = "/search/public/tag", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<NotePageResponse> findPublicNotesByTag(@RequestParam String tag, @RequestParam(defaultValue = "0") int page) {
+		var response = service.findPublicNotesByTag(tag, page);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
+	@PreAuthorize("hasRole('USER')")
 	@PostMapping(value = "/private")
 	public ResponseEntity<NoteResponse> setNotePublicOrPrivate(@RequestParam String name, Principal connectedUser) {
 		var response = service.setNotePublicOrPrivate(name, connectedUser);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
+	@PreAuthorize("hasRole('USER')")
 	@PostMapping(value = "/attach/note", 			
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,6 +79,7 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
+	@PreAuthorize("hasRole('USER')")
 	@DeleteMapping(value = "/attach/remove", 			
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,6 +88,7 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
+	@PreAuthorize("hasRole('USER')")
 	@PostMapping(value = "/create", 
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -77,12 +97,14 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
+	@PreAuthorize("hasRole('USER')")
 	@PutMapping(value = "/edit/{noteName}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<NoteResponse> editNote(@PathVariable String noteName, @RequestBody @Valid EditNoteRequest request, Principal connectedUser) {
 		var response = service.editNote(noteName, request, connectedUser);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	@PreAuthorize("hasRole('USER')")
 	@DeleteMapping(value = "/delete")
 	public ResponseEntity<Void> deleteNote(@RequestParam String name, Principal connectedUser) {
 		service.deleteNote(name, connectedUser);

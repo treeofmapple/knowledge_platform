@@ -1,6 +1,8 @@
 package com.tom.service.knowledges.image;
 
 import java.security.Principal;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,11 +29,16 @@ public class ImageService {
 	private final ImageMapper mapper;
 	private final NoteUtils noteUtils;
 	private final SystemUtils utils;
+    private static final List<String> ALLOWED_IMAGE_TYPES = Arrays.asList("image/png", "image/jpeg");
 	
 	@Transactional
 	public ImageResponse uploadImageToNote(String noteName, MultipartFile file, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is uploading an object", userIp);
+
+        if (!ALLOWED_IMAGE_TYPES.contains(file.getContentType())) {
+            throw new IllegalArgumentException("Invalid file type. Only PNG and JPG images are allowed.");
+        }
 		
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 		
@@ -43,7 +50,7 @@ public class ImageService {
         if (note.getImage() != null) {
             removeImageFromNote(note);
         }
-		
+
 		String key = "images/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
 		functions.putObject(key, file);
 		String s3Url = functions.buildS3Url(key);

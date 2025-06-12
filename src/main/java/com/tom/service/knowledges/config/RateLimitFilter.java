@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
@@ -20,13 +21,16 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 public class RateLimitFilter extends OncePerRequestFilter {
 
+	@Value("${application.rate.limit:20}")
+	private int rateLimit;
+	
     private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
 
     @Bean
     Bucket createNewBucket() {
     	Bandwidth limit = Bandwidth.builder()
-    			.capacity(10)
-    			.refillIntervally(10, Duration.ofMinutes(1))
+    			.capacity(rateLimit)
+    			.refillIntervally(rateLimit, Duration.ofMinutes(1))
     			.build();
     	
         return Bucket.builder()

@@ -9,3 +9,5 @@ application:
   cors:
     allowed-origins: ${ALLOWED_ORIGINS}
     time: 3600
+  rate:
+    limit: ${RATE_LIMIT:20}

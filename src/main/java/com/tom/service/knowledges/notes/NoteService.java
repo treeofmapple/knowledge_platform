@@ -46,7 +46,7 @@ public class NoteService {
 		Page<Note> tagNote = repository.findAllAccessibleNotes(user.getId(), pageable);
 		return mapper.toNotePageResponse(tagNote);
 	}
-
+	
 	@Transactional(readOnly = true)
 	public NotePageResponse findNoteByName(String name, int value, Principal connectedUser) {
 		String userIp = utils.getUserIp();
@@ -60,17 +60,35 @@ public class NoteService {
 	}
 
 	@Transactional(readOnly = true)
-	public NotePageResponse findNoteByTag(String tagName, int value, Principal connectedUser) {
+	public NotePageResponse findAllPublicNotes(int page) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {}", userIp);
-
-		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 		
-		Pageable pageable = PageRequest.of(value, PAGE_SIZE);
-		Page<Note> tagNote = repository.findByTags_NameContainingIgnoreCaseAndAccessible(tagName, user.getId(), pageable);
-		return mapper.toNotePageResponse(tagNote);
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+		Page<Note> publicNotes = repository.findByNotePrivatedIsTrue(pageable);
+		return mapper.toNotePageResponse(publicNotes);
 	}
 
+	@Transactional(readOnly = true)
+	public NotePageResponse findPublicNotesByName(String name, int page) {
+		String userIp = utils.getUserIp();
+		ServiceLogger.info("IP {}", userIp);
+		
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+		Page<Note> publicNotes = repository.findByNameContainingIgnoreCaseAndNotePrivatedIsTrue(name, pageable);
+		return mapper.toNotePageResponse(publicNotes);
+	}
+
+	@Transactional(readOnly = true)
+	public NotePageResponse findPublicNotesByTag(String tagName, int page) {
+		String userIp = utils.getUserIp();
+		ServiceLogger.info("IP {}", userIp);
+		
+		Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+		Page<Note> publicNotes = repository.findByTags_NameContainingIgnoreCaseAndNotePrivatedIsTrue(tagName, pageable);
+		return mapper.toNotePageResponse(publicNotes);
+	}
+	
 	@Transactional
 	public NoteResponse attachTagToNote(AttachTagRequest request, Principal connectedUser) {
 		String userIp = utils.getUserIp();

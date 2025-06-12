@@ -1,6 +1,7 @@
 package com.tom.service.knowledges.attachments;
 
 import java.util.List;
+import java.util.Set;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
@@ -18,7 +19,9 @@ public interface AttachmentMapper {
 
 	// @Mapping(source = "", target = "")
 	AttachmentResponse toResponse(Attachment image);
-
+	
+	Set<AttachmentResponse> toResponseSet(Set<Attachment> attachments);
+	
 	List<AttachmentResponse> toResponseList(List<Attachment> attachments);
 
     @Mapping(source = "file.originalFilename", target = "name")
