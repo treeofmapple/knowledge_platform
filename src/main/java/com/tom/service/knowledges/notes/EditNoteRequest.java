@@ -14,7 +14,9 @@ public record EditNoteRequest(
 	    String annotation,
 	    
 	    Long imageId,
-	    Set<String> tags
+	    Set<String> tags,
+	    
+	    Boolean notePrivated
 	    
 	) {
 

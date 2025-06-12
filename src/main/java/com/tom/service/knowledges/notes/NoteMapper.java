@@ -25,7 +25,7 @@ public interface NoteMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "attachments", ignore = true)
     @Mapping(target = "annotation", ignore = true)
-    @Mapping(target = "notePrivated", ignore = true)
+    @Mapping(source = "notePrivated", target = "notePrivated")
     @Mapping(source = "imageId", target = "image")
     @Mapping(source = "tags", target = "tags")
 	Note build(CreateNoteRequest request);
@@ -34,6 +34,7 @@ public interface NoteMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "attachments", ignore = true)
     @Mapping(target = "annotation", ignore = true)
+    @Mapping(target = "notePrivated", ignore = true)
     @Mapping(source = "imageId", target = "image")
     @Mapping(source = "tags", target = "tags")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

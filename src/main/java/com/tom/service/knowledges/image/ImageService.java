@@ -23,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class ImageService {
 
 	private final AwsFunctions functions;
-	private final ImageRepository imageRepository;
 	private final NoteRepository noteRepository;
 	private final ImageMapper mapper;
 	private final NoteUtils noteUtils;
@@ -52,6 +51,7 @@ public class ImageService {
 		var image = new Image();
 		mapper.mergeFromMultipartFile(image, file, key, s3Url);
 		note.setImage(image);
+		image.setNote(note);
 		noteRepository.save(note);
 
 	    return mapper.toResponse(image);
@@ -75,7 +75,6 @@ public class ImageService {
             noteRepository.save(note);
 
             functions.deleteObject(imageToDelete.getObjectKey());
-            imageRepository.delete(imageToDelete);
 
             ServiceLogger.info("Successfully deleted image for note: {}", noteName);
         }
@@ -91,7 +90,6 @@ public class ImageService {
             noteRepository.save(note);
 
             functions.deleteObject(imageToDelete.getObjectKey());
-            imageRepository.delete(imageToDelete);
 
         }
 	}

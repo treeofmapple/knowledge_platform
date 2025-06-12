@@ -51,7 +51,6 @@ public class AttachmentService {
         }
 		
 		String key = "attachments/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
-		attachmentUtils.checkIfObjectAlreadyExists(file.getOriginalFilename());
 
 		functions.putObject(key, file);
 		String s3Url = functions.buildS3Url(key);

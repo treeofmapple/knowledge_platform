@@ -59,11 +59,11 @@ public class Note extends Auditable {
 		unique = false)
 	private String description;
 
+	// put all the text onto a byte file to be store it easily
 	@Lob
 	@Column(name = "annotation", 
 			nullable = true, 
 			unique = false)
-	// put all the text onto a byte file to be store it easily
 	private byte[] annotation;
 	
 	@Column(name = "public",
@@ -87,10 +87,10 @@ public class Note extends Auditable {
 			joinColumns = {@JoinColumn(name = "notes_id")},
 			inverseJoinColumns = {@JoinColumn(name = "tags_id")})
 	private Set<Tag> tags = new HashSet<>();
-	
+
+	// it must be attached to an user
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "users_id", nullable = false)
-	// it must be attached to an user
 	private User user;
 	
 }

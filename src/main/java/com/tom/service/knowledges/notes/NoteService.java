@@ -36,34 +36,38 @@ public class NoteService {
 	private final ConcurrentHashMap<String, Object> noteCreationLocks = new ConcurrentHashMap<>();
 	
 	@Transactional(readOnly = true)
-	public NotePageResponse findAllNotes(int value) {
+	public NotePageResponse findAllNotes(int value, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {}", userIp);
 
+		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+		
 		Pageable pageable = PageRequest.of(value, PAGE_SIZE);
-		Page<Note> tagNote = repository.findAll(pageable);
+		Page<Note> tagNote = repository.findAllAccessibleNotes(user.getId(), pageable);
 		return mapper.toNotePageResponse(tagNote);
 	}
 
 	@Transactional(readOnly = true)
-	public NotePageResponse findNoteByName(String name, int value) {
+	public NotePageResponse findNoteByName(String name, int value, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {}", userIp);
 
+		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+		
 		Pageable pageable = PageRequest.of(value, PAGE_SIZE);
-		Page<Note> tagNote = repository.findByNameContainingIgnoreCase(name, pageable);
-
+		Page<Note> tagNote = repository.findByNameContainingIgnoreCaseAndAccessible(name, user.getId(), pageable);
 		return mapper.toNotePageResponse(tagNote);
 	}
 
 	@Transactional(readOnly = true)
-	public NotePageResponse findNoteByTag(String tagName, int value) {
+	public NotePageResponse findNoteByTag(String tagName, int value, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {}", userIp);
 
+		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+		
 		Pageable pageable = PageRequest.of(value, PAGE_SIZE);
-		Page<Note> tagNote = repository.findByTags_NameContainingIgnoreCase(tagName, pageable);
-
+		Page<Note> tagNote = repository.findByTags_NameContainingIgnoreCaseAndAccessible(tagName, user.getId(), pageable);
 		return mapper.toNotePageResponse(tagNote);
 	}
 

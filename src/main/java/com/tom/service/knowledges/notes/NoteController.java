@@ -30,20 +30,20 @@ public class NoteController {
 	private final NoteService service;
 
 	@GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<NotePageResponse> findAllNotes(@RequestParam(defaultValue = "0") int value) {
-		var response = service.findAllNotes(value);
+	public ResponseEntity<NotePageResponse> findAllNotes(@RequestParam(defaultValue = "0") int value, Principal connectedUser) {
+		var response = service.findAllNotes(value, connectedUser);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@GetMapping(value = "/search/name", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<NotePageResponse> findNoteByName(@RequestParam String name, @RequestParam(defaultValue = "0") int value) {
-		var response = service.findNoteByName(name, value);
+	public ResponseEntity<NotePageResponse> findNoteByName(@RequestParam String name, @RequestParam(defaultValue = "0") int value, Principal connectedUser) {
+		var response = service.findNoteByName(name, value, connectedUser);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@GetMapping(value = "/search/tag", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<NotePageResponse> findNoteByTag(@RequestParam("name") String noteName, @RequestParam(defaultValue = "0") int value) {
-		var response = service.findNoteByTag(noteName, value);
+	public ResponseEntity<NotePageResponse> findNoteByTag(@RequestParam("name") String noteName, @RequestParam(defaultValue = "0") int value, Principal connectedUser) {
+		var response = service.findNoteByTag(noteName, value, connectedUser);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
