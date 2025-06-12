@@ -1,5 +1,6 @@
 package com.tom.service.knowledges.image;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.tom.service.knowledges.model.Auditable;
 import com.tom.service.knowledges.notes.Note;
 
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -42,6 +44,8 @@ public class Image extends Auditable {
 	@Column(name = "size", nullable = false)
 	private Long size;
 
-	@OneToOne(mappedBy = "image")
+    @OneToOne
+    @JoinColumn(name = "note_id", nullable = false)
+    @JsonBackReference("note-image")
 	private Note note;
 }

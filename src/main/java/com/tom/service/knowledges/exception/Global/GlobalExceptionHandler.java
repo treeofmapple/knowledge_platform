@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.tom.service.knowledges.exception.AlreadyExistsException;
 import com.tom.service.knowledges.exception.BadRequestException;
+import com.tom.service.knowledges.exception.ConflictException;
 import com.tom.service.knowledges.exception.DuplicateException;
 import com.tom.service.knowledges.exception.InternalException;
 import com.tom.service.knowledges.exception.InvalidDateException;
@@ -30,7 +31,7 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(exp.getMessage(), HttpStatus.NOT_FOUND, request, null);
     }
 
-    @ExceptionHandler({ AlreadyExistsException.class, DuplicateException.class })
+    @ExceptionHandler({ AlreadyExistsException.class, DuplicateException.class, ConflictException.class })
     public ResponseEntity<ErrorResponse> handleConflictException(RuntimeException exp, HttpServletRequest request) {
         return buildErrorResponse(exp.getMessage(), HttpStatus.CONFLICT, request, null);
     }

@@ -28,7 +28,7 @@ public class ImageController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ImageResponse> uploadImageToNote(@RequestParam String noteName, @RequestParam MultipartFile file, Principal connectedUser) {
 		var response = service.uploadImageToNote(noteName, file, connectedUser);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	@DeleteMapping(value = "/remove")

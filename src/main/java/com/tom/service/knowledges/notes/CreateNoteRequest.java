@@ -18,7 +18,9 @@ public record CreateNoteRequest(
 	    String annotation,
 
 	    Long imageId,
-	    Set<String> tags
+	    Set<String> tags,
+	    
+	    Boolean notePrivated
 
 ) {
 

@@ -15,6 +15,7 @@ import com.tom.service.knowledges.common.AwsFunctions;
 import com.tom.service.knowledges.common.ServiceLogger;
 import com.tom.service.knowledges.common.SystemUtils;
 import com.tom.service.knowledges.exception.DataTransferenceException;
+import com.tom.service.knowledges.exception.IllegalStatusException;
 import com.tom.service.knowledges.notes.NoteUtils;
 import com.tom.service.knowledges.user.User;
 
@@ -37,6 +38,11 @@ public class AttachmentService {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is uploading an object", userIp);
 
+		long maxSizeInBytes = 20 * 1024 * 1024;
+		if (file.getSize() > maxSizeInBytes) {
+			throw new IllegalStatusException("File size exceeds the 20MB limit.");
+		}
+		
 		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
 
 		var note = noteUtils.ensureNoteExistsAndGet(noteName);

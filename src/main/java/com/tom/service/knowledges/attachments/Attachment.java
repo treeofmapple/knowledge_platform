@@ -1,5 +1,6 @@
 package com.tom.service.knowledges.attachments;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.tom.service.knowledges.model.Auditable;
 import com.tom.service.knowledges.notes.Note;
 
@@ -63,6 +64,7 @@ public class Attachment extends Auditable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "note_id", nullable = false)
+	@JsonBackReference("note-attachment")
 	private Note note;
 	
 }

@@ -13,6 +13,7 @@ public record NoteResponse(
 		String description,
 		String annotation,
 		Image image,
+		Boolean notePrivated,
 		Set<Attachment> attachments,
 		Set<TagResponse> tags,
 		LocalDateTime createdAt

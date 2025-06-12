@@ -31,7 +31,7 @@ public class AttachmentController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<AttachmentResponse> uploadObjectToNote(@RequestParam("name") String noteName, MultipartFile file, Principal connectedUser) {
 		var response = service.uploadObjectToNote(noteName, file, connectedUser);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@GetMapping(value = "/download", produces = "application/zip")
@@ -46,7 +46,7 @@ public class AttachmentController {
         headers.setContentType(MediaType.valueOf("application/zip"));
         headers.setContentDispositionFormData("attachment", noteName + "_attachments.zip");
 		
-        return ResponseEntity.status(HttpStatus.ACCEPTED).headers(headers).body(response);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
 	}
 	
 	@DeleteMapping(value = "/delete")

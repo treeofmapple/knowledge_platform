@@ -32,19 +32,25 @@ public class NoteController {
 	@GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<NotePageResponse> findAllNotes(@RequestParam(defaultValue = "0") int value) {
 		var response = service.findAllNotes(value);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@GetMapping(value = "/search/name", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<NotePageResponse> findNoteByName(@RequestParam String name, @RequestParam(defaultValue = "0") int value) {
 		var response = service.findNoteByName(name, value);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@GetMapping(value = "/search/tag", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<NotePageResponse> findNoteByTag(@RequestParam("name") String noteName, @RequestParam(defaultValue = "0") int value) {
 		var response = service.findNoteByTag(noteName, value);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+	
+	@PostMapping(value = "/private")
+	public ResponseEntity<NoteResponse> setNotePublicOrPrivate(@RequestParam String name, Principal connectedUser) {
+		var response = service.setNotePublicOrPrivate(name, connectedUser);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@PostMapping(value = "/attach/note", 			
@@ -60,7 +66,7 @@ public class NoteController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<NoteResponse> removeTagfromNote(@RequestBody @Valid AttachTagRequest request, Principal connectedUser) {
 		var response = service.removeTagFromNote(request, connectedUser);
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@PostMapping(value = "/create", 
@@ -84,6 +90,4 @@ public class NoteController {
 	}
 
 }
-
-
 

@@ -35,6 +35,7 @@ public class NoteService {
 
 	private final ConcurrentHashMap<String, Object> noteCreationLocks = new ConcurrentHashMap<>();
 	
+	@Transactional(readOnly = true)
 	public NotePageResponse findAllNotes(int value) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {}", userIp);
@@ -44,6 +45,7 @@ public class NoteService {
 		return mapper.toNotePageResponse(tagNote);
 	}
 
+	@Transactional(readOnly = true)
 	public NotePageResponse findNoteByName(String name, int value) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {}", userIp);
@@ -54,6 +56,7 @@ public class NoteService {
 		return mapper.toNotePageResponse(tagNote);
 	}
 
+	@Transactional(readOnly = true)
 	public NotePageResponse findNoteByTag(String tagName, int value) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {}", userIp);
@@ -103,6 +106,24 @@ public class NoteService {
 	}
 
 	@Transactional
+	public NoteResponse setNotePublicOrPrivate(String noteName, Principal connectedUser) {
+		String userIp = utils.getUserIp();
+		ServiceLogger.info("IP {}", userIp);
+		
+		var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+	
+		var note = noteUtils.ensureNoteExistsAndGet(noteName);
+		if (!note.getUser().getId().equals(user.getId())) {
+			throw new SecurityException("User does not have permission to modify this note.");
+		}
+		
+		note.setNotePrivated(!note.getNotePrivated());
+		
+		var savedNote = repository.save(note);
+		return mapper.toResponse(savedNote);
+	}
+	
+	@Transactional
 	public NoteResponse createNote(CreateNoteRequest request, Principal connectedUser) {
 		String userIp = utils.getUserIp();
 		ServiceLogger.info("IP {} is creating note '{}'", userIp, request.name());
@@ -120,6 +141,10 @@ public class NoteService {
 				
 				byte[] annotationBytes = request.annotation().getBytes(StandardCharsets.UTF_8);
 				newNote.setAnnotation(annotationBytes);
+                if (newNote.getImage() != null) {
+                    newNote.getImage().setNote(newNote);
+                }
+				
 				var savedNote = repository.save(newNote);
 
 				ServiceLogger.info("Note '{}' created successfully by user {}", savedNote.getName(), user.getUsername());

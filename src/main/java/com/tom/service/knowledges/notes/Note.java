@@ -3,6 +3,7 @@ package com.tom.service.knowledges.notes;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.tom.service.knowledges.attachments.Attachment;
 import com.tom.service.knowledges.image.Image;
 import com.tom.service.knowledges.model.Auditable;
@@ -64,28 +65,27 @@ public class Note extends Auditable {
 			unique = false)
 	// put all the text onto a byte file to be store it easily
 	private byte[] annotation;
+	
+	@Column(name = "public",
+			nullable = false,
+			unique = false)
+	private Boolean notePrivated;
 
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "image_id", referencedColumnName = "id")
 	// Must provide an image to be set to be show what project it is or no
+	@OneToOne(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference("note-image") 
 	private Image image;
 
-	@OneToMany(
-			mappedBy = "note",
-			cascade = CascadeType.ALL,
-			orphanRemoval = true,
-			fetch = FetchType.LAZY
-	)
 	// can have attachments or no that is files images
+	@OneToMany(mappedBy = "note", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@JsonManagedReference("note-attachment")
 	private Set<Attachment> attachments = new HashSet<>();
-	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = { 
-			CascadeType.PERSIST, 
-			CascadeType.MERGE })
-	@JoinTable(name = "notes_tags", 
+
+	// can be null no tag
+    @ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "note_tags", 
 			joinColumns = {@JoinColumn(name = "notes_id")},
 			inverseJoinColumns = {@JoinColumn(name = "tags_id")})
-	// can be null no tag
 	private Set<Tag> tags = new HashSet<>();
 	
 	@ManyToOne(fetch = FetchType.LAZY)

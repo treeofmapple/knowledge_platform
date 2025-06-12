@@ -20,6 +20,9 @@ public class WhitelistLoader {
         Resource[] resources = resolver.getResources("classpath:/whitelist/*.txt");
 
         for (Resource resource : resources) {
+            if (resource.getFilename() != null && resource.getFilename().equals("csp-directives.txt")) {
+                continue;
+            }
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
                 paths.addAll(reader.lines()
                         .map(String::trim)
@@ -29,5 +32,21 @@ public class WhitelistLoader {
         }
 
         return paths.toArray(new String[0]);
+    }
+    
+    public String loadCspDirectives() throws IOException {
+        var resolver = new PathMatchingResourcePatternResolver();
+        Resource resource = resolver.getResource("classpath:/whitelist/csp-directives.txt");
+
+        if (!resource.exists()) {
+            return "script-src 'self'; style-src 'self'; font-src 'self';";
+        }
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+            return reader.lines()
+                         .map(String::trim)
+                         .filter(line -> !line.isEmpty() && !line.startsWith("#"))
+                         .collect(Collectors.joining(" "));
+        }
     }
 }

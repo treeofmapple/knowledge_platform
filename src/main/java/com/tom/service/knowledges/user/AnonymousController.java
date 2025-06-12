@@ -32,7 +32,7 @@ public class AnonymousController {
 	@PostMapping("/sign-in")
 	public ResponseEntity<AuthenticationResponse> authenticateUser(@RequestBody AuthenticationRequest request, HttpServletResponse response) {
 		var authenticate = service.authenticate(request, response);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(authenticate);
+		return ResponseEntity.status(HttpStatus.OK).body(authenticate);
 	}
 	
 	@PostMapping("/refresh-token")
