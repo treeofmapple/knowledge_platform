@@ -1,0 +1,194 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0d1117;
+    color: #c9d1d9;
+}
+.form-input, .form-textarea {
+    background-color: #010409;
+    border-color: #30363d;
+    color: #c9d1d9;
+    border-radius: 6px;
+    border-width: 1px;
+    padding: 0.75rem;
+}
+.form-input:focus, .form-textarea:focus {
+    outline: none;
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
+}
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+    padding: 0.5rem 1rem;
+}
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.btn-primary { background-color: #238636; color: white; }
+.btn-primary:hover:not(:disabled) { background-color: #2ea043; }
+.btn-secondary { background-color: #21262d; border: 1px solid #30363d; color: #c9d1d9; }
+.btn-secondary:hover:not(:disabled) { border-color: #8b949e; }
+.btn-danger { background-color: #da3633; color: white; }
+.btn-danger:hover:not(:disabled) { background-color: #f85149; }
+.btn-edit { background-color: #388bfd; color: white; }
+.btn-edit:hover:not(:disabled) { background-color: #58a6ff; }
+
+.card { background-color: #161b22; border: 1px solid #30363d; }
+.note-item.active { background-color: #1f6feb; color: white; }
+.note-item.active p { color: #d1d5db; }
+
+.prose p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+.tag-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #30363d;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+}
+.tag-remove-btn {
+    background-color: transparent;
+    border: none;
+    color: #f85149;
+    cursor: pointer;
+    padding: 0.25rem;
+}
+.tag-remove-btn:hover {
+    color: #ff7b72;
+}
+
+/* Old public note card styles are removed for clarity. New styles are below. */
+
+.tag-suggestions-container {
+    position: absolute;
+    width: 100%;
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 10;
+}
+
+.tag-suggestion-item {
+    padding: 0.75rem;
+    cursor: pointer;
+}
+
+.tag-suggestion-item:hover {
+    background-color: #30363d;
+}
+
+.tags-display-container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tag-display-item {
+    display: inline-flex;
+    align-items: center;
+    background-color: #21262d;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tag-display-remove-btn {
+    margin-left: 0.5rem;
+    background: none;
+    border: none;
+    color: #8b949e;
+    cursor: pointer;
+}
+
+.tag-display-remove-btn:hover {
+    color: #f85149;
+}
+
+/* New Public Note List Item Styles */
+.public-note-list-item {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    transition: background-color 0.2s ease-in-out;
+}
+.public-note-list-item:hover {
+    background-color: #21262d;
+}
+.public-note-list-item .image-wrapper {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    background-color: #0d1117;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.public-note-list-item .image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.public-note-list-item .image-wrapper .icon-placeholder {
+    font-size: 32px;
+    color: #484f58;
+}
+.public-note-list-item .content-wrapper {
+    flex-grow: 1;
+}
+.public-note-list-item .note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.public-note-list-item .note-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #c9d1d9;
+}
+.public-note-list-item .note-description {
+    font-size: 0.875rem;
+    color: #8b949e;
+    margin-top: 0.25rem;
+}
+.public-note-list-item .note-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: #6a737d;
+    margin-top: 0.75rem;
+}
+.public-note-list-item .note-icons {
+    color: #6a737d;
+}
+.public-note-list-item .note-icons i {
+    margin-left: 0.75rem;
+    font-size: 0.875rem;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0d1117; }
+::-webkit-scrollbar-thumb { background: #21262d; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #30363d; }
