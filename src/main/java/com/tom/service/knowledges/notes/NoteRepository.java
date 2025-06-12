@@ -15,10 +15,10 @@ public interface NoteRepository extends JpaRepository<Note, Integer> {
 
 	Optional<Note> findByName(String name);
 	
-    @Query("SELECT n FROM Note n WHERE n.notePrivated = FALSE OR (n.notePrivated = TRUE AND n.user.id = :userId)")
+    @Query("SELECT n FROM Note n LEFT JOIN FETCH n.image LEFT JOIN FETCH n.attachments WHERE n.user.id = :userId OR n.notePrivated = true")
     Page<Note> findAllAccessibleNotes(@Param("userId") UUID userId, Pageable pageable);
 
-    @Query("SELECT n FROM Note n WHERE UPPER(n.name) LIKE UPPER(CONCAT('%', :name, '%')) AND (n.notePrivated = FALSE OR (n.notePrivated = TRUE AND n.user.id = :userId))")
+    @Query("SELECT n FROM Note n LEFT JOIN FETCH n.image LEFT JOIN FETCH n.attachments WHERE (n.user.id = :userId OR n.notePrivated = true) AND lower(n.name) LIKE lower(concat('%', :name, '%'))")
     Page<Note> findByNameContainingIgnoreCaseAndAccessible(@Param("name") String name, @Param("userId") UUID userId, Pageable pageable);
 
     @Query("SELECT n FROM Note n JOIN n.tags t WHERE UPPER(t.name) LIKE UPPER(CONCAT('%', :tagName, '%')) AND (n.notePrivated = FALSE OR (n.notePrivated = TRUE AND n.user.id = :userId))")
